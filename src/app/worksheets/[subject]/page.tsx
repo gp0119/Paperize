@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 
 import { getSubject } from "@/features/subjects/registry";
+import { TemplateCard } from "@/features/subjects/template-card";
+import { WithinTenThumbnail } from "@/features/subjects/math/templates/within-ten/thumbnail";
 
 export default async function SubjectTemplatesPage({
   params,
@@ -19,16 +20,14 @@ export default async function SubjectTemplatesPage({
     <main className="mx-auto w-full max-w-5xl px-6 py-12">
       <h1 className="text-3xl font-semibold">{subjectDefinition.name}</h1>
       {subjectDefinition.templates.length ? (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <div className="mt-6 grid items-start gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {subjectDefinition.templates.map((template) => (
-            <Link
+            <TemplateCard
               key={template.id}
-              href={`/worksheets/${subject}/${template.id}`}
-              className="rounded-xl border p-6 transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-4"
-            >
-              <h2 className="text-lg font-medium">{template.name}</h2>
-              <p className="mt-2 text-sm text-muted-foreground">配置题目，生成 A4 练习纸 →</p>
-            </Link>
+              subject={subjectDefinition.id}
+              template={template}
+              preview={subject === "math" && template.id === "within-ten" ? <WithinTenThumbnail /> : null}
+            />
           ))}
         </div>
       ) : (

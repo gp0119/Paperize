@@ -5,6 +5,7 @@ export type SubjectId = (typeof subjectIds)[number];
 export type TemplateDefinition = {
   id: string;
   name: string;
+  tags?: readonly string[];
 };
 
 export type SubjectDefinition = {
