@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { StrokeOrderThumbnail } from "@/features/subjects/chinese/templates/stroke-order/thumbnail";
 
 import { BlankTianZiGeThumbnail } from "@/features/subjects/chinese/templates/blank-tian-zi-ge/thumbnail";
 import { getSubject } from "@/features/subjects/registry";
@@ -28,6 +29,7 @@ export default async function SubjectTemplatesPage({
               subject={subjectDefinition.id}
               template={template}
               preview={
+                subject === "chinese" && template.id === "stroke-order" ? <StrokeOrderThumbnail /> :
                 subject === "chinese" && template.id === "blank-tian-zi-ge" ? <BlankTianZiGeThumbnail /> :
                 subject === "math" && template.id === "within-ten" ? <WithinTenThumbnail /> : null
               }

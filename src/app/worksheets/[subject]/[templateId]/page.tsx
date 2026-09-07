@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { StrokeOrderTemplate } from "@/features/subjects/chinese/templates/stroke-order/template";
 
 import { BlankTianZiGeTemplate } from "@/features/subjects/chinese/templates/blank-tian-zi-ge/template";
 import { WithinTenTemplate } from "@/features/subjects/math/templates/within-ten/template";
@@ -21,6 +22,10 @@ export default async function TemplatePage({
 
   if (subject === "chinese" && template.id === "blank-tian-zi-ge") {
     return <BlankTianZiGeTemplate />;
+  }
+
+  if (subject === "chinese" && template.id === "stroke-order") {
+    return <StrokeOrderTemplate />;
   }
 
   if (subject === "math" && template.id === "within-ten") {
