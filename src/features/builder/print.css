@@ -13,6 +13,10 @@
     background: white !important;
   }
 
+  body {
+    display: block !important;
+  }
+
   [data-template-workspace] {
     display: block !important;
   }
@@ -28,5 +32,13 @@
     min-height: 297mm !important;
     margin: 0 !important;
     box-shadow: none !important;
+    break-inside: avoid;
+    break-after: page;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  [data-worksheet-page]:last-child {
+    break-after: auto;
   }
 }

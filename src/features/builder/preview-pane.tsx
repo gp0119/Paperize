@@ -7,12 +7,7 @@ export function PreviewPane({ children }: { children: ReactNode }) {
       data-preview-pane
       className="overflow-auto bg-muted p-4 md:p-8"
     >
-      <div
-        data-worksheet-page
-        className="mx-auto min-h-[297mm] w-[210mm] bg-white p-12 text-black shadow-sm"
-      >
-        {children}
-      </div>
+      {children}
     </section>
   );
 }
