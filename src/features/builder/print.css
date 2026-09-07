@@ -1,0 +1,32 @@
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  [data-print-hidden] {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: white !important;
+  }
+
+  [data-template-workspace] {
+    display: block !important;
+  }
+
+  [data-preview-pane] {
+    overflow: visible !important;
+    background: white !important;
+    padding: 0 !important;
+  }
+
+  [data-worksheet-page] {
+    width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+}
