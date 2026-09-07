@@ -1,0 +1,46 @@
+export const gridTypes = ['作文格', '田字格', '米字格', '回宫格', '九宫格', '回田格', '回米格'] as const
+
+export type GridLayout = {
+  gridType: typeof gridTypes[number]
+  cellSize: number
+  rowGap: number
+  marginTop: number
+  marginRight: number
+  marginBottom: number
+  marginLeft: number
+  color: string
+}
+
+export const defaultLayout: GridLayout = {
+  gridType: '田字格',
+  cellSize: 14,
+  rowGap: 2,
+  marginTop: 20,
+  marginRight: 14,
+  marginBottom: 20,
+  marginLeft: 14,
+  color: '#48b85e',
+}
+
+export function validateLayout(layout: GridLayout): string | null {
+  if (!gridTypes.includes(layout.gridType)) return '请选择有效的方格类型。'
+  if (!Number.isFinite(layout.cellSize) || layout.cellSize < 8 || layout.cellSize > 25) return '方格大小需在 8～25 mm 之间。'
+  if (!Number.isFinite(layout.rowGap) || layout.rowGap < 0 || layout.rowGap > 10) return '行间距需在 0～10 mm 之间。'
+  if ([layout.marginTop, layout.marginRight, layout.marginBottom, layout.marginLeft].some((margin) => !Number.isFinite(margin) || margin < 5 || margin > 30)) {
+    return '页边距需在 5～30 mm 之间。'
+  }
+  if (!/^#[0-9a-f]{6}$/i.test(layout.color)) return '请选择有效的格子颜色。'
+  return null
+}
+
+export function getGridDimensions(layout: GridLayout) {
+  const columns = Math.floor((210 - layout.marginLeft - layout.marginRight) / layout.cellSize)
+  // 姓名日期栏及下方间隔占 15 mm，页脚预留 8 mm。
+  const rows = Math.floor((297 - layout.marginTop - layout.marginBottom - 23 + layout.rowGap) / (layout.cellSize + layout.rowGap))
+  return {
+    columns,
+    rows,
+    width: columns * layout.cellSize,
+    height: rows * layout.cellSize + (rows - 1) * layout.rowGap,
+  }
+}

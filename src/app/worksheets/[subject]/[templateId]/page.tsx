@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { BlankTianZiGeTemplate } from "@/features/subjects/chinese/templates/blank-tian-zi-ge/template";
 import { WithinTenTemplate } from "@/features/subjects/math/templates/within-ten/template";
 import { getSubject } from "@/features/subjects/registry";
 
@@ -16,6 +17,10 @@ export default async function TemplatePage({
 
   if (!subjectDefinition || !template) {
     notFound();
+  }
+
+  if (subject === "chinese" && template.id === "blank-tian-zi-ge") {
+    return <BlankTianZiGeTemplate />;
   }
 
   if (subject === "math" && template.id === "within-ten") {

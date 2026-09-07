@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { BlankTianZiGeThumbnail } from "@/features/subjects/chinese/templates/blank-tian-zi-ge/thumbnail";
 import { getSubject } from "@/features/subjects/registry";
 import { TemplateCard } from "@/features/subjects/template-card";
 import { WithinTenThumbnail } from "@/features/subjects/math/templates/within-ten/thumbnail";
@@ -26,7 +27,10 @@ export default async function SubjectTemplatesPage({
               key={template.id}
               subject={subjectDefinition.id}
               template={template}
-              preview={subject === "math" && template.id === "within-ten" ? <WithinTenThumbnail /> : null}
+              preview={
+                subject === "chinese" && template.id === "blank-tian-zi-ge" ? <BlankTianZiGeThumbnail /> :
+                subject === "math" && template.id === "within-ten" ? <WithinTenThumbnail /> : null
+              }
             />
           ))}
         </div>
