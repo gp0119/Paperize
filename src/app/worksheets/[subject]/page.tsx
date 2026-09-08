@@ -5,6 +5,7 @@ import { BlankTianZiGeThumbnail } from "@/features/subjects/chinese/templates/bl
 import { BlankFourLineThumbnail } from "@/features/subjects/english/templates/blank-four-line/thumbnail";
 import { getSubject } from "@/features/subjects/registry";
 import { TemplateCard } from "@/features/subjects/template-card";
+import { MakeTenThumbnail } from "@/features/subjects/math/templates/make-ten/thumbnail";
 import { WithinTenThumbnail } from "@/features/subjects/math/templates/within-ten/thumbnail";
 
 export default async function SubjectTemplatesPage({
@@ -33,6 +34,7 @@ export default async function SubjectTemplatesPage({
                 subject === "chinese" && template.id === "stroke-order" ? <StrokeOrderThumbnail /> :
                 subject === "chinese" && template.id === "blank-tian-zi-ge" ? <BlankTianZiGeThumbnail /> :
                 subject === "english" && template.id === "blank-four-line" ? <BlankFourLineThumbnail /> :
+                subject === "math" && template.id === "make-ten" ? <MakeTenThumbnail /> :
                 subject === "math" && template.id === "within-ten" ? <WithinTenThumbnail /> : null
               }
             />

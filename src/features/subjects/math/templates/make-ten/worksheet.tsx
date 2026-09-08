@@ -1,0 +1,71 @@
+import type { Exercise } from './generator'
+import { columnGap, diagramHeight, diagramWidth, getExerciseHeight, type WorksheetLayout } from './layout'
+
+export function MakeTenDiagram({ exercise, showAnswers = false }: { exercise: Exercise; showAnswers?: boolean }) {
+  const { left, right } = exercise
+  const complement = 10 - left
+
+  return (
+    <svg
+      viewBox={`0 0 ${diagramWidth} ${diagramHeight}`}
+      className='block h-full w-full text-black'
+      role='img'
+      aria-label={`${left} 加 ${right}${showAnswers ? ` 等于 ${left + right}，把 ${right} 拆成 ${complement} 和 ${right - complement}，${left} 加 ${complement} 凑成 10` : `，把 ${right} 拆成两部分，与 ${left} 凑成 10，填写分解数和结果`}`}
+    >
+      <g fill='currentColor' fontFamily='Arial, sans-serif' fontSize='28' textAnchor='middle'>
+        <text x='24' y='43'>{left}</text>
+        <text x='82' y='43'>+</text>
+        <text x='140' y='43'>{right}</text>
+        <text x='198' y='43'>=</text>
+        <text x='62' y='255'>10</text>
+      </g>
+      <g fill='none' stroke='currentColor' strokeWidth='1.8'>
+        <rect x='244' y='10' width='80' height='44' />
+        <path d='M 119 72 L 112 98 M 161 72 L 168 98' />
+        <rect x='80' y='125' width='44' height='44' />
+        <rect x='168' y='125' width='44' height='44' />
+        <path d='M 24 72 V 211 H 102 V 182' />
+      </g>
+      {showAnswers ? (
+        <g fill='currentColor' fontFamily='Arial, sans-serif' fontSize='28' textAnchor='middle'>
+          <text x='284' y='43'>{left + right}</text>
+          <text x='102' y='157'>{complement}</text>
+          <text x='190' y='157'>{right - complement}</text>
+        </g>
+      ) : null}
+    </svg>
+  )
+}
+
+export function MakeTenWorksheet({ exercises, layout, showAnswers = false, pageIndex, pageCount }: {
+  exercises: readonly Exercise[]
+  layout: WorksheetLayout
+  showAnswers?: boolean
+  pageIndex: number
+  pageCount: number
+}) {
+  return (
+    <article data-worksheet-page aria-label={`第 ${pageIndex + 1} 页，共 ${pageCount} 页`} className='relative mx-auto mb-8 h-[297mm] w-[210mm] bg-white px-[14mm] py-[9mm] font-sans text-black shadow-sm last:mb-0'>
+      <header className='flex items-center justify-between text-[16px]'>
+        <span>姓名：____________</span>
+        <span>日期：____月____日</span>
+      </header>
+      <h2 className='mt-6 text-center text-[24px] font-medium'>凑十法{showAnswers ? '（答案）' : ''}</h2>
+      <p className='mt-2 text-center text-[14px]'>拆第二个数，先凑成 10，再加剩下的数。</p>
+      <div
+        className='mt-5 grid'
+        style={{
+          gridTemplateColumns: `repeat(${layout.columns}, minmax(0, 1fr))`,
+          gridAutoRows: `${getExerciseHeight(layout)}mm`,
+          rowGap: `${layout.rowGap}mm`,
+          columnGap: `${columnGap}mm`,
+        }}
+      >
+        {exercises.map((exercise, index) => (
+          <MakeTenDiagram key={index} exercise={exercise} showAnswers={showAnswers} />
+        ))}
+      </div>
+      <footer className='absolute inset-x-0 bottom-[6mm] text-center text-[16px]'>{pageIndex + 1}/{pageCount}</footer>
+    </article>
+  )
+}
