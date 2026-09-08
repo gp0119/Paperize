@@ -20,7 +20,7 @@ export function SiteNavigation({
   return (
     <nav
       aria-label="主导航"
-      className="flex min-w-0 items-center justify-self-end gap-1 overflow-x-auto lg:col-start-2 lg:justify-self-center"
+      className="flex min-w-0 items-center justify-self-end gap-1 overflow-x-auto overflow-y-hidden p-1 lg:col-start-2 lg:justify-self-center"
     >
       {items.map((item) => {
         const isActive =
