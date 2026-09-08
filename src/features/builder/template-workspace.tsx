@@ -27,6 +27,9 @@ export function TemplateWorkspace({
           <h1 className="text-xl font-semibold">{title}</h1>
           <PrintButton />
         </div>
+        <p className="mb-6 text-sm text-muted-foreground">
+          彩色打印请在打印设置中选择“彩色”，并开启“背景图形”；若仍为黑白，请检查打印机首选项。
+        </p>
         {configuration}
       </aside>
 

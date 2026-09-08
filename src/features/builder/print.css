@@ -4,6 +4,13 @@
 }
 
 @media print {
+  /* Keep only worksheet pages and their ancestors; exclude injected overlays. */
+  html:has([data-worksheet-page]) body *:not(
+    [data-worksheet-page],
+    [data-worksheet-page] *,
+    :has([data-worksheet-page])
+  ),
+  html:has([data-worksheet-page]) > :not(head, body),
   [data-print-hidden] {
     display: none !important;
   }
@@ -34,8 +41,14 @@
     box-shadow: none !important;
     break-inside: avoid;
     break-after: page;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
+  }
+
+  [data-worksheet-page],
+  [data-worksheet-page] *,
+  [data-worksheet-page] *::before,
+  [data-worksheet-page] *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   [data-worksheet-page]:last-child {
