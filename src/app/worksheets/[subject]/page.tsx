@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { StrokeOrderThumbnail } from "@/features/subjects/chinese/templates/stroke-order/thumbnail";
 
 import { BlankTianZiGeThumbnail } from "@/features/subjects/chinese/templates/blank-tian-zi-ge/thumbnail";
+import { BlankFourLineThumbnail } from "@/features/subjects/english/templates/blank-four-line/thumbnail";
 import { getSubject } from "@/features/subjects/registry";
 import { TemplateCard } from "@/features/subjects/template-card";
 import { WithinTenThumbnail } from "@/features/subjects/math/templates/within-ten/thumbnail";
@@ -31,6 +32,7 @@ export default async function SubjectTemplatesPage({
               preview={
                 subject === "chinese" && template.id === "stroke-order" ? <StrokeOrderThumbnail /> :
                 subject === "chinese" && template.id === "blank-tian-zi-ge" ? <BlankTianZiGeThumbnail /> :
+                subject === "english" && template.id === "blank-four-line" ? <BlankFourLineThumbnail /> :
                 subject === "math" && template.id === "within-ten" ? <WithinTenThumbnail /> : null
               }
             />

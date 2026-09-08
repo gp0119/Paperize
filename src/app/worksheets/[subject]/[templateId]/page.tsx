@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { StrokeOrderTemplate } from "@/features/subjects/chinese/templates/stroke-order/template";
 
 import { BlankTianZiGeTemplate } from "@/features/subjects/chinese/templates/blank-tian-zi-ge/template";
+import { BlankFourLineTemplate } from "@/features/subjects/english/templates/blank-four-line/template";
 import { WithinTenTemplate } from "@/features/subjects/math/templates/within-ten/template";
 import { getSubject } from "@/features/subjects/registry";
 
@@ -26,6 +27,10 @@ export default async function TemplatePage({
 
   if (subject === "chinese" && template.id === "stroke-order") {
     return <StrokeOrderTemplate />;
+  }
+
+  if (subject === "english" && template.id === "blank-four-line") {
+    return <BlankFourLineTemplate />;
   }
 
   if (subject === "math" && template.id === "within-ten") {
