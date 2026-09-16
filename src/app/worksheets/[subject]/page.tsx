@@ -7,7 +7,7 @@ import { getSubject } from "@/features/subjects/registry";
 import { TemplateCard } from "@/features/subjects/template-card";
 import { BreakTenThumbnail } from "@/features/subjects/math/templates/break-ten/thumbnail";
 import { MakeTenThumbnail } from "@/features/subjects/math/templates/make-ten/thumbnail";
-import { WithinTenThumbnail } from "@/features/subjects/math/templates/within-ten/thumbnail";
+import { ArithmeticThumbnail } from "@/features/subjects/math/templates/arithmetic/thumbnail";
 
 export default async function SubjectTemplatesPage({
   params,
@@ -37,7 +37,8 @@ export default async function SubjectTemplatesPage({
                 subject === "english" && template.id === "blank-four-line" ? <BlankFourLineThumbnail /> :
                 subject === "math" && template.id === "break-ten" ? <BreakTenThumbnail /> :
                 subject === "math" && template.id === "make-ten" ? <MakeTenThumbnail /> :
-                subject === "math" && template.id === "within-ten" ? <WithinTenThumbnail /> : null
+                subject === "math" && template.id === "within-twenty" ? <ArithmeticThumbnail maximum={20} /> :
+                subject === "math" && template.id === "within-ten" ? <ArithmeticThumbnail maximum={10} /> : null
               }
             />
           ))}

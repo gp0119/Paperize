@@ -16,7 +16,7 @@ export const defaultLayout: WorksheetLayout = {
 
 export const exerciseLineHeight = 1.5;
 
-export function validateLayout(layout: WorksheetLayout, margins: PageMargins = defaultPageMargins): string | null {
+export function validateLayout(layout: WorksheetLayout, margins: PageMargins = defaultPageMargins, maximum: 10 | 20 = 10): string | null {
   if (!Number.isInteger(layout.columns) || layout.columns < 1 || layout.columns > 6) {
     return '列数请输入 1～6 的整数。';
   }
@@ -27,7 +27,7 @@ export function validateLayout(layout: WorksheetLayout, margins: PageMargins = d
     return '间距请输入 0～20 mm。';
   }
   const columnWidthPx = (getContentWidth(margins) - (layout.columns - 1) * layout.columnGap) / layout.columns * (96 / 25.4);
-  if (columnWidthPx < layout.fontSize * 6) {
+  if (columnWidthPx < layout.fontSize * (maximum === 20 ? 7 : 6)) {
     return '每列空间不足以容纳算式和答案，请减少列数、字号或列间距。';
   }
   return null;

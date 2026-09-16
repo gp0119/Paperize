@@ -32,7 +32,7 @@ export function validateOptions(options: ArithmeticOptions): string | null {
   return null;
 }
 
-export function generateExercises(options: ArithmeticOptions, seed: number): Exercise[] {
+export function generateExercises(options: ArithmeticOptions, seed: number, maximum: 10 | 20 = 10): Exercise[] {
   const error = validateOptions(options);
   if (error) throw new Error(error);
 
@@ -52,9 +52,9 @@ export function generateExercises(options: ArithmeticOptions, seed: number): Exe
 
   const pools: Record<Exercise["operator"], Exercise[]> = { "+": [], "−": [] };
   const minimum = options.includeZero ? 0 : 1;
-  for (let left = minimum; left <= 10; left++) {
-    for (let right = minimum; right <= 10; right++) {
-      if (left + right <= 10) pools["+"].push({ left, right, operator: "+" });
+  for (let left = minimum; left <= maximum; left++) {
+    for (let right = minimum; right <= maximum; right++) {
+      if (left + right <= maximum) pools["+"].push({ left, right, operator: "+" });
       if (left - right >= minimum) pools["−"].push({ left, right, operator: "−" });
     }
   }

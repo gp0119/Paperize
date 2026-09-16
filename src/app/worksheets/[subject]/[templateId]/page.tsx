@@ -5,7 +5,7 @@ import { BlankTianZiGeTemplate } from "@/features/subjects/chinese/templates/bla
 import { BlankFourLineTemplate } from "@/features/subjects/english/templates/blank-four-line/template";
 import { BreakTenTemplate } from "@/features/subjects/math/templates/break-ten/template";
 import { MakeTenTemplate } from "@/features/subjects/math/templates/make-ten/template";
-import { WithinTenTemplate } from "@/features/subjects/math/templates/within-ten/template";
+import { ArithmeticTemplate } from "@/features/subjects/math/templates/arithmetic/template";
 import { getSubject } from "@/features/subjects/registry";
 
 export default async function TemplatePage({
@@ -44,7 +44,11 @@ export default async function TemplatePage({
   }
 
   if (subject === "math" && template.id === "within-ten") {
-    return <WithinTenTemplate />;
+    return <ArithmeticTemplate maximum={10} />;
+  }
+
+  if (subject === "math" && template.id === "within-twenty") {
+    return <ArithmeticTemplate maximum={20} />;
   }
 
   notFound();

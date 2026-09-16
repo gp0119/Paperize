@@ -10,22 +10,22 @@ import { defaultPageMargins } from '@/features/builder/page-margins'
 import { TemplateWorkspace } from '@/features/builder/template-workspace'
 import { defaultOptions, generateExercises, validateOptions } from './generator'
 import { defaultLayout, getPageCapacity, validateLayout } from './layout'
-import { WithinTenWorksheet } from './worksheet'
+import { ArithmeticWorksheet } from './worksheet'
 
-export function WithinTenTemplate() {
+export function ArithmeticTemplate({ maximum }: { maximum: 10 | 20 }) {
   const [margins, setMargins] = useState(defaultPageMargins)
   const [options, setOptions] = useState(defaultOptions)
   const [layout, setLayout] = useState(defaultLayout)
   const [seed, setSeed] = useState(42)
   const [error, setError] = useState<string | null>(null)
-  const exercises = useMemo(() => generateExercises(options, seed), [options, seed])
+  const exercises = useMemo(() => generateExercises(options, seed, maximum), [options, seed, maximum])
   const pageCapacity = getPageCapacity(layout, margins)
   const pageCount = Math.ceil(exercises.length / pageCapacity)
   const additionCount = exercises.filter((exercise) => exercise.operator === '+').length
 
   return (
-    <TemplateWorkspace margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validateLayout(layout, next)}
-      title='10 以内加减法'
+    <TemplateWorkspace margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validateLayout(layout, next, maximum)}
+      title={`${maximum} 以内加减法`}
       configuration={
         <form
           className='space-y-6'
@@ -44,7 +44,7 @@ export function WithinTenTemplate() {
               rowGap: number('rowGap'),
               columnGap: number('columnGap'),
             }
-            const message = validateOptions(next) || validateLayout(nextLayout, margins)
+            const message = validateOptions(next) || validateLayout(nextLayout, margins, maximum)
             setError(message)
             if (!message) {
               setOptions(next)
@@ -163,8 +163,9 @@ export function WithinTenTemplate() {
       }
       preview={
         Array.from({ length: pageCount }, (_, pageIndex) => (
-          <WithinTenWorksheet
+          <ArithmeticWorksheet
             key={pageIndex}
+            maximum={maximum}
             exercises={exercises.slice(pageIndex * pageCapacity, (pageIndex + 1) * pageCapacity)}
             layout={layout}
             pageIndex={pageIndex}

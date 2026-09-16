@@ -3,17 +3,18 @@ import { WorksheetHeader, WorksheetFooter } from '@/features/builder/worksheet-c
 import type { Exercise } from './generator'
 import { exerciseLineHeight, type WorksheetLayout } from './layout'
 
-type WithinTenWorksheetProps = {
+type ArithmeticWorksheetProps = {
+  maximum: 10 | 20
   exercises: readonly Exercise[]
   layout: WorksheetLayout
   pageIndex: number
   pageCount: number
 }
 
-export function WithinTenWorksheet({ exercises, layout, pageIndex, pageCount }: WithinTenWorksheetProps) {
+export function ArithmeticWorksheet({ maximum, exercises, layout, pageIndex, pageCount }: ArithmeticWorksheetProps) {
   return (
     <article data-worksheet-page aria-label={`第 ${pageIndex + 1} 页，共 ${pageCount} 页`} className='relative mx-auto mb-8 h-[297mm] w-[210mm] bg-white font-sans text-[#333] shadow-sm last:mb-0'>
-      <WorksheetHeader title='10 以内加减法' description='用时：____ 分 ____ 秒　　正确率：____ / ____' />
+      <WorksheetHeader title={`${maximum} 以内加减法`} description='用时：____ 分 ____ 秒　　正确率：____ / ____' />
       <div
         className='mt-3 grid'
         style={{
