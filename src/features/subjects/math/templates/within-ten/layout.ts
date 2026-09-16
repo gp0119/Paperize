@@ -8,7 +8,7 @@ export type WorksheetLayout = {
 };
 
 export const defaultLayout: WorksheetLayout = {
-  columns: 3,
+  columns: 2,
   fontSize: 20,
   rowGap: 3.2,
   columnGap: 8,

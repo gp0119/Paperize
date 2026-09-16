@@ -57,7 +57,7 @@ export function WithinTenTemplate() {
           }}
         >
           <SettingsGroup title='内容'>
-            <div>
+            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
               <label htmlFor='count' className='text-sm font-medium'>
                 题目数量（10～300）
               </label>
@@ -69,7 +69,7 @@ export function WithinTenTemplate() {
                 step={10}
                 required
                 defaultValue={defaultOptions.count}
-                className='mt-2'
+                className='min-w-0'
               />
             </div>
             <div>
@@ -80,8 +80,8 @@ export function WithinTenTemplate() {
             </div>
             <fieldset>
               <legend className='text-sm font-medium'>加减比例</legend>
-              <div className='mt-3 grid grid-cols-2 gap-3'>
-                <div>
+              <div className='mt-3 space-y-3'>
+                <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
                   <label htmlFor='addition-weight' className='text-sm'>
                     加法
                   </label>
@@ -93,10 +93,10 @@ export function WithinTenTemplate() {
                     step={1}
                     required
                     defaultValue={defaultOptions.additionWeight}
-                    className='mt-2'
+                    className='min-w-0'
                   />
                 </div>
-                <div>
+                <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
                   <label htmlFor='subtraction-weight' className='text-sm'>
                     减法
                   </label>
@@ -108,14 +108,14 @@ export function WithinTenTemplate() {
                     step={1}
                     required
                     defaultValue={defaultOptions.subtractionWeight}
-                    className='mt-2'
+                    className='min-w-0'
                   />
                 </div>
               </div>
             </fieldset>
           </SettingsGroup>
           <SettingsGroup title='版式'>
-            <div>
+            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
               <label htmlFor='columns' className='text-sm font-medium'>列数（1～6）</label>
               <InputNumber
                 id='columns'
@@ -125,23 +125,23 @@ export function WithinTenTemplate() {
                 step={1}
                 required
                 defaultValue={defaultLayout.columns}
-                className='mt-2'
+                className='min-w-0'
               />
             </div>
             <fieldset>
               <legend className='text-sm font-medium'>字号与间距</legend>
-              <div className='mt-3 grid grid-cols-2 gap-3'>
-                <div>
+              <div className='mt-3 space-y-3'>
+                <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
                   <label htmlFor='font-size' className='text-sm'>字号（px）</label>
-                  <InputNumber id='font-size' name='fontSize' min={12} max={36} step='any' required defaultValue={defaultLayout.fontSize} className='mt-2' />
+                  <InputNumber id='font-size' name='fontSize' min={12} max={36} step='any' required defaultValue={defaultLayout.fontSize} className='min-w-0' />
                 </div>
-                <div>
+                <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
                   <label htmlFor='row-gap' className='text-sm'>行间距（mm）</label>
-                  <InputNumber id='row-gap' name='rowGap' min={0} max={20} step='any' required defaultValue={defaultLayout.rowGap} className='mt-2' />
+                  <InputNumber id='row-gap' name='rowGap' min={0} max={20} step='any' required defaultValue={defaultLayout.rowGap} className='min-w-0' />
                 </div>
-                <div>
+                <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
                   <label htmlFor='column-gap' className='text-sm'>列间距（mm）</label>
-                  <InputNumber id='column-gap' name='columnGap' min={0} max={20} step='any' required defaultValue={defaultLayout.columnGap} className='mt-2' />
+                  <InputNumber id='column-gap' name='columnGap' min={0} max={20} step='any' required defaultValue={defaultLayout.columnGap} className='min-w-0' />
                 </div>
               </div>
             </fieldset>

@@ -12,8 +12,8 @@ export type Exercise = {
 };
 
 export const defaultOptions: ArithmeticOptions = {
-  count: 30,
-  includeZero: true,
+  count: 40,
+  includeZero: false,
   additionWeight: 1,
   subtractionWeight: 1,
 };

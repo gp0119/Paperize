@@ -8,7 +8,7 @@ export type Exercise = {
   right: number;
 };
 
-export const defaultOptions: MakeTenOptions = { count: 30, firstAddend: 0 };
+export const defaultOptions: MakeTenOptions = { count: 12, firstAddend: 0 };
 
 export function validateOptions(options: MakeTenOptions): string | null {
   if (!Number.isInteger(options.count) || options.count < 1 || options.count > 300) {

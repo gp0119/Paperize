@@ -53,35 +53,36 @@ export function TemplateWorkspace({
         </div>
         <div className="space-y-6">
           {configuration}
-          <form onSubmit={(event) => event.preventDefault()} onChange={(event) => {
-            const data = new FormData(event.currentTarget);
-            const number = (name: string) => data.get(name) === "" ? NaN : Number(data.get(name));
-            const next = {
-              marginTop: number("marginTop"), marginRight: number("marginRight"),
-              marginBottom: number("marginBottom"), marginLeft: number("marginLeft"),
-            };
-            const message = Object.values(next).some((value) => !Number.isFinite(value) || value < 5 || value > 30)
-              ? "页边距需在 5～30 mm 之间。"
-              : validateMargins?.(next) ?? null;
-            setMarginError(message);
-            if (!message) onMarginsChange(next);
-          }}>
-            <SettingsGroup title="页边距（mm）">
-              <div className="grid grid-cols-2 gap-3">
-                {([
-                  ["marginTop", "上"], ["marginRight", "右"],
-                  ["marginBottom", "下"], ["marginLeft", "左"],
-                ] as const).map(([name, label]) => (
-                  <div key={name}>
-                    <label htmlFor={name} className="text-sm">{label}</label>
-                    <InputNumber id={name} name={name} min={5} max={30} step={0.5} required defaultValue={margins[name]} className="mt-2" />
-                  </div>
-                ))}
-              </div>
-              {marginError ? <p role="alert" className="text-sm text-destructive">{marginError}预览未更新。</p> : null}
-            </SettingsGroup>
-          </form>
-          <SettingsGroup title="页眉页脚">
+          <SettingsGroup title="页面设置">
+            <form onSubmit={(event) => event.preventDefault()} onChange={(event) => {
+              const data = new FormData(event.currentTarget);
+              const number = (name: string) => data.get(name) === "" ? NaN : Number(data.get(name));
+              const next = {
+                marginTop: number("marginVertical"), marginRight: number("marginHorizontal"),
+                marginBottom: number("marginVertical"), marginLeft: number("marginHorizontal"),
+              };
+              const message = Object.values(next).some((value) => !Number.isFinite(value) || value < 5 || value > 30)
+                ? "页边距需在 5～30 mm 之间。"
+                : validateMargins?.(next) ?? null;
+              setMarginError(message);
+              if (!message) onMarginsChange(next);
+            }}>
+              <fieldset className="space-y-3">
+                <legend className="text-sm font-medium">页边距（mm）</legend>
+                <div className="space-y-3">
+                  {([
+                    ["marginVertical", "上下", margins.marginTop],
+                    ["marginHorizontal", "左右", margins.marginLeft],
+                  ] as const).map(([name, label, value]) => (
+                    <div key={name} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2">
+                      <label htmlFor={name} className="text-sm">{label}</label>
+                      <InputNumber id={name} name={name} min={5} max={30} step={0.5} required defaultValue={value} className="min-w-0" />
+                    </div>
+                  ))}
+                </div>
+                {marginError ? <p role="alert" className="text-sm text-destructive">{marginError}预览未更新。</p> : null}
+              </fieldset>
+            </form>
             <label className="flex items-center gap-3 text-sm">
               <input type="checkbox" checked={hideHeader} onChange={(event) => setHideHeader(event.target.checked)} className="size-4 accent-slate-900" />
               隐藏页眉

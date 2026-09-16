@@ -6,9 +6,9 @@ export type PageMargins = {
 }
 
 export const defaultPageMargins: PageMargins = {
-  marginTop: 20,
+  marginTop: 14,
   marginRight: 14,
-  marginBottom: 20,
+  marginBottom: 14,
   marginLeft: 14,
 }
 

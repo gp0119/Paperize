@@ -37,25 +37,25 @@ export function BlankTianZiGeTemplate() {
           }}
         >
           <SettingsGroup title='格子'>
-            <div>
+            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
               <label htmlFor='grid-type' className='text-sm font-medium'>方格类型</label>
-              <Select id='grid-type' name='gridType' defaultValue={defaultLayout.gridType} className='mt-2'
+              <Select id='grid-type' name='gridType' defaultValue={defaultLayout.gridType} className='min-w-0'
                 options={gridTypes.map((type) => ({ value: type, label: type }))}
               />
             </div>
-            <div>
-              <div className='flex items-center justify-between text-sm'>
-                <label htmlFor='cell-size' className='font-medium'>方格大小</label>
-                <output htmlFor='cell-size'>{layout.cellSize} mm</output>
+            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
+              <label htmlFor='cell-size' className='text-sm font-medium'>方格大小</label>
+              <div className='flex min-w-0 items-center gap-2'>
+                <input id='cell-size' name='cellSize' type='range' min={8} max={25} step={0.5} defaultValue={defaultLayout.cellSize} className='min-w-0 flex-1 accent-slate-900' />
+                <output htmlFor='cell-size' className='w-12 shrink-0 text-right text-xs'>{layout.cellSize} mm</output>
               </div>
-              <input id='cell-size' name='cellSize' type='range' min={8} max={25} step={0.5} defaultValue={defaultLayout.cellSize} className='mt-3 w-full accent-slate-900' />
             </div>
-            <div>
-              <div className='flex items-center justify-between text-sm'>
-                <label htmlFor='row-gap' className='font-medium'>行间距</label>
-                <output htmlFor='row-gap'>{layout.rowGap} mm</output>
+            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
+              <label htmlFor='row-gap' className='text-sm font-medium'>行间距</label>
+              <div className='flex min-w-0 items-center gap-2'>
+                <input id='row-gap' name='rowGap' type='range' min={0} max={10} step={0.5} defaultValue={defaultLayout.rowGap} className='min-w-0 flex-1 accent-slate-900' />
+                <output htmlFor='row-gap' className='w-12 shrink-0 text-right text-xs'>{layout.rowGap} mm</output>
               </div>
-              <input id='row-gap' name='rowGap' type='range' min={0} max={10} step={0.5} defaultValue={defaultLayout.rowGap} className='mt-3 w-full accent-slate-900' />
             </div>
             <div className='flex items-center justify-between'>
               <label htmlFor='grid-color' className='text-sm font-medium'>格子颜色</label>

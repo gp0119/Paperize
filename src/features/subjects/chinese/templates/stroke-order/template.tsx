@@ -51,15 +51,15 @@ export function StrokeOrderTemplate() {
     <TemplateWorkspace margins={margins} onMarginsChange={setMargins} title='笔顺字帖' configuration={
       <form className='space-y-6' onSubmit={(event) => { event.preventDefault(); if (!loading) void generate() }}>
         <SettingsGroup title='内容'>
-          <div>
+          <div className='flex flex-col gap-2'>
             <label htmlFor='characters' className='text-sm font-medium'>自定义汉字</label>
-            <textarea id='characters' value={text} onChange={(event) => setText(event.target.value)} disabled={loading} rows={4} maxLength={1000} aria-describedby='characters-help' className='mt-2 w-full rounded-md border border-input bg-background p-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50' />
-            <p id='characters-help' className='mt-2 text-xs text-muted-foreground'>{inputCharacters.length} / 40 字</p>
+            <textarea id='characters' value={text} onChange={(event) => setText(event.target.value)} disabled={loading} rows={4} maxLength={1000} aria-describedby='characters-help' className='min-w-0 w-full rounded-md border border-input bg-background p-3 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50' />
+            <p id='characters-help' className='text-xs text-muted-foreground'>{inputCharacters.length} / 40 字</p>
           </div>
           <Button type='submit' className='w-full' disabled={loading}>{loading ? '正在生成…' : '生成字帖'}</Button>
-          <div>
+          <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
             <label htmlFor='tracing-count' className='text-sm font-medium'>每字描红格数</label>
-            <Select id='tracing-count' value={String(tracingCount)} onValueChange={(value) => setTracingCount(Number(value))} className='mt-2'
+            <Select id='tracing-count' value={String(tracingCount)} onValueChange={(value) => setTracingCount(Number(value))} className='min-w-0'
               options={[0, 2, 4, 6, 8].map((count) => ({ value: String(count), label: `${count} 格描红` }))}
             />
           </div>

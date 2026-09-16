@@ -49,13 +49,13 @@ export function MakeTenTemplate() {
           }}
         >
           <SettingsGroup title='内容'>
-            <div>
+            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
               <label htmlFor='count' className='text-sm font-medium'>题目数量（1～300）</label>
-              <InputNumber id='count' name='count' min={1} max={300} step={1} required defaultValue={defaultOptions.count} className='mt-2' />
+              <InputNumber id='count' name='count' min={1} max={300} step={1} required defaultValue={defaultOptions.count} className='min-w-0' />
             </div>
-            <div>
+            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
               <label htmlFor='first-addend' className='text-sm font-medium'>第一加数</label>
-              <Select id='first-addend' name='firstAddend' defaultValue={String(defaultOptions.firstAddend)} className='mt-2'
+              <Select id='first-addend' name='firstAddend' defaultValue={String(defaultOptions.firstAddend)} className='min-w-0'
                 options={[
                   { value: '0', label: '混合练习（2～9）' },
                   ...Array.from({ length: 8 }, (_, index) => {
@@ -71,13 +71,13 @@ export function MakeTenTemplate() {
             </label>
           </SettingsGroup>
           <SettingsGroup title='版式'>
-            <div>
+            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
               <label htmlFor='columns' className='text-sm font-medium'>列数（1～3）</label>
-              <InputNumber id='columns' name='columns' min={1} max={3} step={1} required defaultValue={defaultLayout.columns} className='mt-2' />
+              <InputNumber id='columns' name='columns' min={1} max={3} step={1} required defaultValue={defaultLayout.columns} className='min-w-0' />
             </div>
-            <div>
+            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
               <label htmlFor='row-gap' className='text-sm font-medium'>行间距（mm）</label>
-              <InputNumber id='row-gap' name='rowGap' min={0} max={20} step='any' required defaultValue={defaultLayout.rowGap} className='mt-2' />
+              <InputNumber id='row-gap' name='rowGap' min={0} max={20} step='any' required defaultValue={defaultLayout.rowGap} className='min-w-0' />
             </div>
           </SettingsGroup>
           {error ? <p role='alert' className='text-sm text-destructive'>{error}预览未更新。</p> : null}

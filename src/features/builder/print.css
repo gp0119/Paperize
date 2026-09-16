@@ -1,10 +1,10 @@
 [data-worksheet-page] {
-  padding: var(--page-margin-top, 20mm) var(--page-margin-right, 14mm) var(--page-margin-bottom, 20mm) var(--page-margin-left, 14mm);
+  padding: var(--page-margin-top, 14mm) var(--page-margin-right, 14mm) var(--page-margin-bottom, 14mm) var(--page-margin-left, 14mm);
 }
 
 [data-worksheet-footer] {
   right: var(--page-margin-right, 14mm);
-  bottom: var(--page-margin-bottom, 20mm);
+  bottom: var(--page-margin-bottom, 14mm);
 }
 
 [data-hide-header="true"] [data-worksheet-header],

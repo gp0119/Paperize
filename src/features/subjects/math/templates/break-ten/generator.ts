@@ -8,7 +8,7 @@ export type Exercise = {
   right: number;
 };
 
-export const defaultOptions: BreakTenOptions = { count: 30, subtrahend: 0 };
+export const defaultOptions: BreakTenOptions = { count: 12, subtrahend: 0 };
 
 export function validateOptions(options: BreakTenOptions): string | null {
   if (!Number.isInteger(options.count) || options.count < 1 || options.count > 300) {

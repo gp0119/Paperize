@@ -5,7 +5,7 @@ export type WorksheetLayout = {
   rowGap: number;
 };
 
-export const defaultLayout: WorksheetLayout = { columns: 3, rowGap: 6 };
+export const defaultLayout: WorksheetLayout = { columns: 3, rowGap: 14 };
 export const columnGap = 8;
 export const diagramWidth = 360;
 export const diagramHeight = 270;
