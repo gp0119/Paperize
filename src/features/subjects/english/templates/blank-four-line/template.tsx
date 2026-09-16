@@ -1,17 +1,19 @@
+'use client'
+
+import { useState } from 'react'
+
+import { defaultPageMargins } from '@/features/builder/page-margins'
 import { TemplateWorkspace } from '@/features/builder/template-workspace'
 
 import { BlankFourLineWorksheet } from './worksheet'
 
 export function BlankFourLineTemplate() {
+  const [margins, setMargins] = useState(defaultPageMargins)
   return (
-    <TemplateWorkspace
+    <TemplateWorkspace margins={margins} onMarginsChange={setMargins}
       title='空白四线三格'
-      configuration={
-        <p className='text-sm leading-6 text-muted-foreground'>
-          固定 A4 纵向单页，无预填内容。
-        </p>
-      }
-      preview={<BlankFourLineWorksheet />}
+      configuration={null}
+      preview={<BlankFourLineWorksheet margins={margins} />}
     />
   )
 }

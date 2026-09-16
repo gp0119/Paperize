@@ -1,4 +1,7 @@
-import { cellSize, columns, getBlockHeight, type CharacterStrokes } from './layout'
+import { defaultPageMargins, type PageMargins } from '@/features/builder/page-margins'
+import { WorksheetHeader, WorksheetFooter, defaultGridColor } from '@/features/builder/worksheet-chrome'
+
+import { cellSize, getColumns, getBlockHeight, type CharacterStrokes } from './layout'
 
 function TianZiCell({ strokes, step, tracing = false, color }: { strokes: string[]; step?: number; tracing?: boolean; color: string }) {
   return (
@@ -14,19 +17,16 @@ function TianZiCell({ strokes, step, tracing = false, color }: { strokes: string
   )
 }
 
-export function StrokeOrderWorksheet({ characters, pageIndex = 0, pageCount = 1, color = '#596273', tracingCount = 4 }: { characters: CharacterStrokes[]; pageIndex?: number; pageCount?: number; color?: string; tracingCount?: number }) {
+export function StrokeOrderWorksheet({ characters, pageIndex = 0, pageCount = 1, color = defaultGridColor, tracingCount = 4, margins = defaultPageMargins }: { characters: CharacterStrokes[]; pageIndex?: number; pageCount?: number; color?: string; tracingCount?: number; margins?: PageMargins }) {
+  const columns = getColumns(margins)
+  const gridStyle = { gridTemplateColumns: `repeat(${columns}, ${cellSize}mm)` }
+
   return (
-    <article data-worksheet-page aria-label={`笔顺字帖，第 ${pageIndex + 1} 页，共 ${pageCount} 页`} className='relative mx-auto mb-8 h-[297mm] w-[210mm] bg-white px-[15mm] py-[14mm] text-[#333] shadow-sm last:mb-0'>
-      <header className='h-[28mm]'>
-        <div className='flex items-center justify-between'>
-          <h2 className='text-[24px] font-semibold tracking-widest'>田字格 · 笔顺字帖</h2>
-          <span className='text-[13px]'>姓名：________　日期：________</span>
-        </div>
-        <p className='mt-2 text-[12px] text-[#666]'>先看范字，再按笔顺写一写：浅红色为当前笔画，浅灰色为已写笔画，之后描红、独立书写。</p>
-      </header>
+    <article data-worksheet-page aria-label={`笔顺字帖，第 ${pageIndex + 1} 页，共 ${pageCount} 页`} className='relative mx-auto mb-8 h-[297mm] w-[210mm] bg-white text-[#333] shadow-sm last:mb-0'>
+      <WorksheetHeader title='田字格 · 笔顺字帖' description='先看范字，再按笔顺写一写：浅红色为当前笔画，浅灰色为已写笔画，之后描红、独立书写。' />
       {characters.map((entry, entryIndex) => (
-        <section key={entryIndex} aria-label={`${entry.character}，${entry.strokes.length} 画`} style={{ height: `${getBlockHeight(entry)}mm` }}>
-          <div className='grid grid-cols-11 auto-rows-[19mm] gap-x-[1.5mm]'>
+        <section key={entryIndex} aria-label={`${entry.character}，${entry.strokes.length} 画`} style={{ height: `${getBlockHeight(entry, margins)}mm` }}>
+          <div className='grid auto-rows-[19mm] gap-x-[1.5mm]' style={gridStyle}>
             <div aria-label={`${entry.character}，范字`}>
               <TianZiCell strokes={entry.strokes} color={color} />
             </div>
@@ -36,7 +36,7 @@ export function StrokeOrderWorksheet({ characters, pageIndex = 0, pageCount = 1,
               </div>
             ))}
           </div>
-          <div aria-label='描红与独立书写练习' className='grid grid-cols-11 auto-rows-[19mm] gap-x-[1.5mm]'>
+          <div aria-label='描红与独立书写练习' className='grid auto-rows-[19mm] gap-x-[1.5mm]' style={gridStyle}>
             {Array.from({ length: columns }, (_, index) => (
               <div key={`practice-${index}`} aria-label={index < tracingCount ? '描红' : '独立书写'}>
                 <TianZiCell strokes={index < tracingCount ? entry.strokes : []} tracing color={color} />
@@ -45,7 +45,7 @@ export function StrokeOrderWorksheet({ characters, pageIndex = 0, pageCount = 1,
           </div>
         </section>
       ))}
-      <footer className='absolute right-[15mm] bottom-[10mm] text-[12px]'>第 {pageIndex + 1} 页 [共 {pageCount} 页]</footer>
+      <WorksheetFooter pageIndex={pageIndex} pageCount={pageCount} />
     </article>
   )
 }

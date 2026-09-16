@@ -1,3 +1,5 @@
+import { defaultPageMargins, getContentWidth, getContentHeight, type PageMargins } from '@/features/builder/page-margins'
+
 export type WorksheetLayout = {
   columns: number;
   rowGap: number;
@@ -18,11 +20,11 @@ export function validateLayout(layout: WorksheetLayout): string | null {
   return null;
 }
 
-export function getExerciseHeight(layout: WorksheetLayout): number {
-  return (182 - (layout.columns - 1) * columnGap) / layout.columns * diagramHeight / diagramWidth;
+export function getExerciseHeight(layout: WorksheetLayout, margins: PageMargins = defaultPageMargins): number {
+  return (getContentWidth(margins) - (layout.columns - 1) * columnGap) / layout.columns * diagramHeight / diagramWidth;
 }
 
-export function getPageCapacity(layout: WorksheetLayout): number {
+export function getPageCapacity(layout: WorksheetLayout, margins: PageMargins = defaultPageMargins): number {
   // A4 预留页眉、标题和页脚后的题目区域，单位为 mm。
-  return Math.floor((232 + layout.rowGap) / (getExerciseHeight(layout) + layout.rowGap)) * layout.columns;
+  return Math.floor((getContentHeight(margins) - 42 + layout.rowGap) / (getExerciseHeight(layout, margins) + layout.rowGap)) * layout.columns;
 }

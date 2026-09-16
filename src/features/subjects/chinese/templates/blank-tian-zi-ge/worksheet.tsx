@@ -1,7 +1,10 @@
+import { defaultPageMargins, type PageMargins } from '@/features/builder/page-margins'
+import { WorksheetHeader, WorksheetFooter } from '@/features/builder/worksheet-chrome'
+
 import { defaultLayout, getGridDimensions, type GridLayout } from './layout'
 
-export function BlankTianZiGeWorksheet({ layout = defaultLayout }: { layout?: GridLayout }) {
-  const { rows, columns, width, height } = getGridDimensions(layout)
+export function BlankTianZiGeWorksheet({ layout = defaultLayout, margins = defaultPageMargins }: { layout?: GridLayout; margins?: PageMargins }) {
+  const { rows, columns, width, height } = getGridDimensions(layout, margins)
   const size = layout.cellSize
   const hasCross = ['田字格', '米字格', '回田格', '回米格'].includes(layout.gridType)
   const hasDiagonals = ['米字格', '回米格'].includes(layout.gridType)
@@ -12,12 +15,8 @@ export function BlankTianZiGeWorksheet({ layout = defaultLayout }: { layout?: Gr
       data-worksheet-page
       aria-label={`空白${layout.gridType}，第 1 页，共 1 页`}
       className='relative mx-auto mb-8 h-[297mm] w-[210mm] bg-white font-sans text-[#333] shadow-sm last:mb-0'
-      style={{ padding: `${layout.marginTop}mm ${layout.marginRight}mm ${layout.marginBottom}mm ${layout.marginLeft}mm` }}
     >
-      <div className='flex h-[10mm] items-center justify-between whitespace-nowrap text-[18px]'>
-        <span>姓名：__________</span>
-        <span>____ 年 ____ 月 ____ 日</span>
-      </div>
+      <WorksheetHeader />
       <svg
         viewBox={`0 0 ${width} ${height}`}
         style={{ width: `${width}mm`, height: `${height}mm` }}
@@ -32,7 +31,7 @@ export function BlankTianZiGeWorksheet({ layout = defaultLayout }: { layout?: Gr
               <path key={column} d={`M ${(column + 1) * size} 0 v ${size}`} />
             ))}
             {layout.gridType !== '作文格' ? (
-              <g strokeDasharray='1.2 0.9' strokeOpacity={0.8}>
+              <g strokeWidth={size * 0.006} strokeDasharray={`${size * 0.03} ${size * 0.03}`}>
                 {Array.from({ length: columns }, (_, column) => (
                   <g key={column} transform={`translate(${column * size} 0)`}>
                     {hasCross ? <path d={`M 0 ${size / 2} H ${size} M ${size / 2} 0 V ${size}`} /> : null}
@@ -48,7 +47,7 @@ export function BlankTianZiGeWorksheet({ layout = defaultLayout }: { layout?: Gr
           </g>
         ))}
       </svg>
-      <footer className='absolute text-[14px]' style={{ right: `${layout.marginRight}mm`, bottom: `${layout.marginBottom}mm` }}>第1页 [共1页]</footer>
+      <WorksheetFooter />
     </article>
   )
 }

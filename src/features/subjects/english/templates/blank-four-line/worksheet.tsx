@@ -1,24 +1,30 @@
+import { defaultPageMargins, getContentWidth, getContentHeight, type PageMargins } from '@/features/builder/page-margins'
+
+import { WorksheetHeader, WorksheetFooter } from '@/features/builder/worksheet-chrome'
+
 const lineSpacing = 4
 const groupGap = 6
-const groupCount = 14
 const lineStrokeWidth = 0.15
-const worksheetWidth = 182
-const worksheetHeight = 246.25
-const svgWidth = worksheetWidth + lineStrokeWidth
 
-export function BlankFourLineWorksheet() {
+export function BlankFourLineWorksheet({ margins = defaultPageMargins }: { margins?: PageMargins }) {
+  const svgWidth = getContentWidth(margins)
+  const worksheetWidth = svgWidth - lineStrokeWidth
+  // 姓名日期栏和间隔占 15 mm，页脚预留 8 mm。
+  const groupCount = Math.floor((getContentHeight(margins) - 23 + groupGap - lineStrokeWidth) / (lineSpacing * 3 + groupGap))
+  const worksheetHeight = groupCount * (lineSpacing * 3 + groupGap) - groupGap + lineStrokeWidth
   return (
     <article
       data-worksheet-page
       aria-label='空白英语四线三格练习纸，第 1 页，共 1 页'
-      className='mx-auto mb-8 h-[297mm] w-[210mm] bg-white px-[14mm] pt-[20mm] shadow-sm last:mb-0'
+      className='relative mx-auto mb-8 h-[297mm] w-[210mm] bg-white shadow-sm last:mb-0'
     >
+      <WorksheetHeader />
       <svg
         viewBox={`-${lineStrokeWidth / 2} 0 ${svgWidth} ${worksheetHeight}`}
         style={{ width: `${svgWidth}mm`, height: `${worksheetHeight}mm` }}
-        className='block'
+        className='mt-[5mm] block'
         role='img'
-        aria-label='14 组空白英语四线三格，每组 4 条等距横线'
+        aria-label={`${groupCount} 组空白英语四线三格，每组 4 条等距横线`}
       >
         {Array.from({ length: groupCount }, (_, group) => {
           const groupOffset = group * ((lineSpacing * 3) + groupGap) + lineStrokeWidth / 2
@@ -36,6 +42,7 @@ export function BlankFourLineWorksheet() {
           )
         })}
       </svg>
+      <WorksheetFooter />
     </article>
   )
 }

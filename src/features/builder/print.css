@@ -1,3 +1,17 @@
+[data-worksheet-page] {
+  padding: var(--page-margin-top, 20mm) var(--page-margin-right, 14mm) var(--page-margin-bottom, 20mm) var(--page-margin-left, 14mm);
+}
+
+[data-worksheet-footer] {
+  right: var(--page-margin-right, 14mm);
+  bottom: var(--page-margin-bottom, 20mm);
+}
+
+[data-hide-header="true"] [data-worksheet-header],
+[data-hide-footer="true"] [data-worksheet-footer] {
+  visibility: hidden;
+}
+
 @page {
   size: A4 portrait;
   margin: 0;
