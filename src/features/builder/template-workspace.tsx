@@ -1,15 +1,27 @@
 "use client";
 
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from "react";
 
-import { InputNumber } from "@/components/ui/input-number";
+import type { PageVisibility } from "./page-visibility";
+
 import type { PageMargins } from "./page-margins";
 
+import { Select } from "@/components/ui/select";
+import { ExportButton } from "./export-button";
+import { PageMarginsField } from "./page-margins-field";
 import { PreviewPane } from "./preview-pane";
 import { PrintButton } from "./print-button";
 import { SettingsGroup } from "./settings-group";
 
+const visibilityOptions = [
+  { value: "show", label: "显示" },
+  { value: "hide", label: "隐藏" },
+];
+
 type TemplateWorkspaceProps = {
+  visibility: PageVisibility;
+  onVisibilityChange: (visibility: PageVisibility) => void;
+  hasTitle?: boolean;
   margins: PageMargins;
   onMarginsChange: (margins: PageMargins) => void;
   validateMargins?: (margins: PageMargins) => string | null;
@@ -19,6 +31,9 @@ type TemplateWorkspaceProps = {
 };
 
 export function TemplateWorkspace({
+  visibility,
+  onVisibilityChange,
+  hasTitle = true,
   margins,
   onMarginsChange,
   validateMargins,
@@ -26,76 +41,70 @@ export function TemplateWorkspace({
   configuration,
   preview,
 }: TemplateWorkspaceProps) {
-  const [marginError, setMarginError] = useState<string | null>(null);
-  const [hideHeader, setHideHeader] = useState(false);
-  const [hideFooter, setHideFooter] = useState(false);
+  const { hideHeader, hideTitle, hideFooter } = visibility;
 
   return (
-    <main
-      style={{
-        "--page-margin-top": `${margins.marginTop}mm`,
-        "--page-margin-right": `${margins.marginRight}mm`,
-        "--page-margin-bottom": `${margins.marginBottom}mm`,
-        "--page-margin-left": `${margins.marginLeft}mm`,
-      } as CSSProperties}
-      data-template-workspace
-      data-hide-header={hideHeader}
-      data-hide-footer={hideFooter}
-      className="grid min-h-0 flex-1 lg:grid-cols-[22rem_minmax(0,1fr)]"
-    >
-      <aside
-        data-print-hidden
-        className="border-b bg-background p-6 lg:border-r lg:border-b-0"
+    <div className="flex flex-1 justify-center bg-muted print:block print:bg-white">
+      <main
+        style={{
+          "--page-margin-top": `${margins.marginTop}mm`,
+          "--page-margin-right": `${margins.marginRight}mm`,
+          "--page-margin-bottom": `${margins.marginBottom}mm`,
+          "--page-margin-left": `${margins.marginLeft}mm`,
+        } as CSSProperties}
+        data-template-workspace
+        data-hide-header={hideHeader}
+        data-hide-title={hideTitle}
+        data-hide-footer={hideFooter}
+        className="grid w-full max-w-7xl items-start gap-6 px-4 py-4 sm:px-6 sm:py-6 lg:grid-cols-[minmax(0,1fr)_22rem]"
       >
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <h1 className="text-xl font-semibold">{title}</h1>
-          <PrintButton />
-        </div>
-        <div className="space-y-6">
-          {configuration}
-          <SettingsGroup title="页面设置">
-            <form onSubmit={(event) => event.preventDefault()} onChange={(event) => {
-              const data = new FormData(event.currentTarget);
-              const number = (name: string) => data.get(name) === "" ? NaN : Number(data.get(name));
-              const next = {
-                marginTop: number("marginVertical"), marginRight: number("marginHorizontal"),
-                marginBottom: number("marginVertical"), marginLeft: number("marginHorizontal"),
-              };
-              const message = Object.values(next).some((value) => !Number.isFinite(value) || value < 5 || value > 30)
-                ? "页边距需在 5～30 mm 之间。"
-                : validateMargins?.(next) ?? null;
-              setMarginError(message);
-              if (!message) onMarginsChange(next);
-            }}>
-              <fieldset className="space-y-3">
-                <legend className="text-sm font-medium">页边距（mm）</legend>
-                <div className="space-y-3">
-                  {([
-                    ["marginVertical", "上下", margins.marginTop],
-                    ["marginHorizontal", "左右", margins.marginLeft],
-                  ] as const).map(([name, label, value]) => (
-                    <div key={name} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2">
-                      <label htmlFor={name} className="text-sm">{label}</label>
-                      <InputNumber id={name} name={name} min={5} max={30} step={0.5} required defaultValue={value} className="min-w-0" />
-                    </div>
-                  ))}
+        <aside
+          data-print-hidden
+          className="lg:sticky lg:top-20 lg:order-last lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto"
+        >
+          <div className="mb-4 grid grid-cols-2 gap-3">
+            <ExportButton fileName={title} />
+            <PrintButton />
+          </div>
+          <div className="space-y-4">
+            {configuration}
+            <SettingsGroup>
+              <PageMarginsField margins={margins} onChange={onMarginsChange} validate={validateMargins} />
+              <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3">
+                <label htmlFor="page-header" className="text-sm font-medium">页眉</label>
+                <Select
+                  id="page-header"
+                  value={hideHeader ? "hide" : "show"}
+                  onValueChange={(value) => onVisibilityChange({ ...visibility, hideHeader: value === "hide" })}
+                  options={visibilityOptions}
+                />
+              </div>
+              {hasTitle ? (
+                <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3">
+                  <label htmlFor="page-title" className="text-sm font-medium">标题</label>
+                  <Select
+                    id="page-title"
+                    value={hideTitle ? "hide" : "show"}
+                    onValueChange={(value) => onVisibilityChange({ ...visibility, hideTitle: value === "hide" })}
+                    options={visibilityOptions}
+                  />
                 </div>
-                {marginError ? <p role="alert" className="text-sm text-destructive">{marginError}预览未更新。</p> : null}
-              </fieldset>
-            </form>
-            <label className="flex items-center gap-3 text-sm">
-              <input type="checkbox" checked={hideHeader} onChange={(event) => setHideHeader(event.target.checked)} className="size-4 accent-slate-900" />
-              隐藏页眉
-            </label>
-            <label className="flex items-center gap-3 text-sm">
-              <input type="checkbox" checked={hideFooter} onChange={(event) => setHideFooter(event.target.checked)} className="size-4 accent-slate-900" />
-              隐藏页脚
-            </label>
-          </SettingsGroup>
-        </div>
-      </aside>
+              ) : null}
+              <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3">
+                <label htmlFor="page-footer" className="text-sm font-medium">页脚</label>
+                <Select
+                  id="page-footer"
+                  value={hideFooter ? "hide" : "show"}
+                  onValueChange={(value) => onVisibilityChange({ ...visibility, hideFooter: value === "hide" })}
+                  options={visibilityOptions}
+                />
+              </div>
+            </SettingsGroup>
+          </div>
+        </aside>
 
-      <PreviewPane>{preview}</PreviewPane>
-    </main>
+        <PreviewPane>{preview}</PreviewPane>
+      </main>
+    </div>
   );
 }

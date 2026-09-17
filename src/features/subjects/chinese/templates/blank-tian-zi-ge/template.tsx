@@ -4,19 +4,21 @@ import { useState } from 'react'
 
 import { Select } from '@/components/ui/select'
 import { SettingsGroup } from '@/features/builder/settings-group'
+import { SliderField } from '@/features/builder/slider-field'
+import { defaultPageVisibility } from '@/features/builder/page-visibility'
 import { defaultPageMargins } from '@/features/builder/page-margins'
 import { TemplateWorkspace } from '@/features/builder/template-workspace'
-import { defaultLayout, getGridDimensions, gridTypes, validateLayout, type GridLayout } from './layout'
+import { defaultLayout, gridTypes, validateLayout, type GridLayout } from './layout'
 import { BlankTianZiGeWorksheet } from './worksheet'
 
 export function BlankTianZiGeTemplate() {
+  const [visibility, setVisibility] = useState(defaultPageVisibility)
   const [margins, setMargins] = useState(defaultPageMargins)
   const [layout, setLayout] = useState(defaultLayout)
   const [error, setError] = useState<string | null>(null)
-  const { rows, columns } = getGridDimensions(layout, margins)
 
   return (
-    <TemplateWorkspace margins={margins} onMarginsChange={setMargins}
+    <TemplateWorkspace visibility={visibility} onVisibilityChange={setVisibility} hasTitle={false} margins={margins} onMarginsChange={setMargins}
       title='空白田字格'
       configuration={
         <form
@@ -36,39 +38,24 @@ export function BlankTianZiGeTemplate() {
             if (!message) setLayout(next)
           }}
         >
-          <SettingsGroup title='格子'>
+          <SettingsGroup>
             <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
               <label htmlFor='grid-type' className='text-sm font-medium'>方格类型</label>
               <Select id='grid-type' name='gridType' defaultValue={defaultLayout.gridType} className='min-w-0'
                 options={gridTypes.map((type) => ({ value: type, label: type }))}
               />
             </div>
-            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-              <label htmlFor='cell-size' className='text-sm font-medium'>方格大小</label>
-              <div className='flex min-w-0 items-center gap-2'>
-                <input id='cell-size' name='cellSize' type='range' min={8} max={25} step={0.5} defaultValue={defaultLayout.cellSize} className='min-w-0 flex-1 accent-slate-900' />
-                <output htmlFor='cell-size' className='w-12 shrink-0 text-right text-xs'>{layout.cellSize} mm</output>
-              </div>
-            </div>
-            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-              <label htmlFor='row-gap' className='text-sm font-medium'>行间距</label>
-              <div className='flex min-w-0 items-center gap-2'>
-                <input id='row-gap' name='rowGap' type='range' min={0} max={10} step={0.5} defaultValue={defaultLayout.rowGap} className='min-w-0 flex-1 accent-slate-900' />
-                <output htmlFor='row-gap' className='w-12 shrink-0 text-right text-xs'>{layout.rowGap} mm</output>
-              </div>
-            </div>
+            <SliderField name='cellSize' label='方格大小（mm）' min={8} max={25} step={0.5} defaultValue={defaultLayout.cellSize} />
+            <SliderField name='rowGap' label='行间距（mm）' min={0} max={10} step={0.5} defaultValue={defaultLayout.rowGap} />
             <div className='flex items-center justify-between'>
               <label htmlFor='grid-color' className='text-sm font-medium'>格子颜色</label>
               <input id='grid-color' name='color' type='color' defaultValue={defaultLayout.color} className='h-9 w-14 cursor-pointer rounded-md border border-input p-1' />
             </div>
           </SettingsGroup>
           {error ? <p role='alert' className='text-sm text-destructive'>{error}预览未更新。</p> : null}
-          <div aria-live='polite' className='rounded-lg bg-muted p-4 text-sm leading-6'>
-            {rows} 行 × {columns} 列 · {rows * columns} 格
-          </div>
         </form>
       }
-      preview={<BlankTianZiGeWorksheet layout={layout} margins={margins} />}
+      preview={<BlankTianZiGeWorksheet layout={layout} margins={margins} visibility={visibility} />}
     />
   )
 }

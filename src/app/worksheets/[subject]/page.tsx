@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { PenControlThumbnail } from "@/features/subjects/chinese/templates/pen-control/thumbnail";
 import { StrokeOrderThumbnail } from "@/features/subjects/chinese/templates/stroke-order/thumbnail";
 
 import { BlankTianZiGeThumbnail } from "@/features/subjects/chinese/templates/blank-tian-zi-ge/thumbnail";
@@ -8,6 +9,7 @@ import { TemplateCard } from "@/features/subjects/template-card";
 import { BreakTenThumbnail } from "@/features/subjects/math/templates/break-ten/thumbnail";
 import { MakeTenThumbnail } from "@/features/subjects/math/templates/make-ten/thumbnail";
 import { ArithmeticThumbnail } from "@/features/subjects/math/templates/arithmetic/thumbnail";
+import { NumberPracticeThumbnail } from "@/features/subjects/math/templates/number-practice/thumbnail";
 
 export default async function SubjectTemplatesPage({
   params,
@@ -32,11 +34,13 @@ export default async function SubjectTemplatesPage({
               subject={subjectDefinition.id}
               template={template}
               preview={
+                subject === "chinese" && template.id === "pen-control" ? <PenControlThumbnail /> :
                 subject === "chinese" && template.id === "stroke-order" ? <StrokeOrderThumbnail /> :
                 subject === "chinese" && template.id === "blank-tian-zi-ge" ? <BlankTianZiGeThumbnail /> :
                 subject === "english" && template.id === "blank-four-line" ? <BlankFourLineThumbnail /> :
                 subject === "math" && template.id === "break-ten" ? <BreakTenThumbnail /> :
                 subject === "math" && template.id === "make-ten" ? <MakeTenThumbnail /> :
+                subject === "math" && template.id === "number-practice" ? <NumberPracticeThumbnail /> :
                 subject === "math" && template.id === "within-twenty" ? <ArithmeticThumbnail maximum={20} /> :
                 subject === "math" && template.id === "within-ten" ? <ArithmeticThumbnail maximum={10} /> : null
               }

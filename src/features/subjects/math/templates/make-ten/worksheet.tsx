@@ -49,9 +49,10 @@ export function MakeTenWorksheet({ exercises, layout, margins = defaultPageMargi
   pageCount: number
 }) {
   return (
-    <article data-worksheet-page aria-label={`第 ${pageIndex + 1} 页，共 ${pageCount} 页`} className='relative mx-auto mb-8 h-[297mm] w-[210mm] bg-white font-sans text-[#333] shadow-sm last:mb-0'>
+    <article data-worksheet-page aria-label={`第 ${pageIndex + 1} 页，共 ${pageCount} 页`} className='relative mb-8 h-[297mm] w-[210mm] bg-white font-sans text-[#333] shadow-sm last:mb-0'>
       <WorksheetHeader title={`凑十法${showAnswers ? '（答案）' : ''}`} description='拆第二个数，先凑成 10，再加剩下的数。' />
       <div
+        data-worksheet-content
         className='mt-5 grid'
         style={{
           gridTemplateColumns: `repeat(${layout.columns}, minmax(0, 1fr))`,

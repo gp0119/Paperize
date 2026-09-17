@@ -8,8 +8,14 @@
 }
 
 [data-hide-header="true"] [data-worksheet-header],
+[data-hide-title="true"] [data-worksheet-title],
 [data-hide-footer="true"] [data-worksheet-footer] {
-  visibility: hidden;
+  display: none;
+}
+
+[data-hide-header="true"][data-hide-title="true"] [data-worksheet-content],
+[data-hide-header="true"] [data-worksheet-page]:not(:has([data-worksheet-title])) [data-worksheet-content] {
+  margin-top: 0;
 }
 
 @page {
@@ -40,6 +46,9 @@
 
   [data-template-workspace] {
     display: block !important;
+    max-width: none !important;
+    padding: 0 !important;
+    background: white !important;
   }
 
   [data-preview-pane] {

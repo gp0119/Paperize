@@ -4,8 +4,10 @@ import { useMemo, useState } from 'react'
 import { RefreshCw } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { InputNumber } from '@/components/ui/input-number'
+import { CheckboxField } from '@/features/builder/checkbox-field'
 import { SettingsGroup } from '@/features/builder/settings-group'
+import { SliderField } from '@/features/builder/slider-field'
+import { defaultPageVisibility } from '@/features/builder/page-visibility'
 import { defaultPageMargins } from '@/features/builder/page-margins'
 import { TemplateWorkspace } from '@/features/builder/template-workspace'
 import { defaultOptions, generateExercises, validateOptions } from './generator'
@@ -13,18 +15,18 @@ import { defaultLayout, getPageCapacity, validateLayout } from './layout'
 import { ArithmeticWorksheet } from './worksheet'
 
 export function ArithmeticTemplate({ maximum }: { maximum: 10 | 20 }) {
+  const [visibility, setVisibility] = useState(defaultPageVisibility)
   const [margins, setMargins] = useState(defaultPageMargins)
   const [options, setOptions] = useState(defaultOptions)
   const [layout, setLayout] = useState(defaultLayout)
   const [seed, setSeed] = useState(42)
   const [error, setError] = useState<string | null>(null)
   const exercises = useMemo(() => generateExercises(options, seed, maximum), [options, seed, maximum])
-  const pageCapacity = getPageCapacity(layout, margins)
+  const pageCapacity = getPageCapacity(layout, margins, visibility)
   const pageCount = Math.ceil(exercises.length / pageCapacity)
-  const additionCount = exercises.filter((exercise) => exercise.operator === '+').length
 
   return (
-    <TemplateWorkspace margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validateLayout(layout, next, maximum)}
+    <TemplateWorkspace visibility={visibility} onVisibilityChange={setVisibility} margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validateLayout(layout, next, maximum)}
       title={`${maximum} 以内加减法`}
       configuration={
         <form
@@ -56,105 +58,23 @@ export function ArithmeticTemplate({ maximum }: { maximum: 10 | 20 }) {
             if (!error) setSeed(Math.floor(Math.random() * 4294967296))
           }}
         >
-          <SettingsGroup title='内容'>
-            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-              <label htmlFor='count' className='text-sm font-medium'>
-                题目数量（10～300）
-              </label>
-              <InputNumber
-                id='count'
-                name='count'
-                min={10}
-                max={300}
-                step={10}
-                required
-                defaultValue={defaultOptions.count}
-                className='min-w-0'
-              />
-            </div>
-            <div>
-              <label className='flex items-center gap-3 text-sm font-medium'>
-                <input name='includeZero' type='checkbox' defaultChecked={defaultOptions.includeZero} className='size-4 accent-slate-900' />
-                包含 0（算式和结果）
-              </label>
-            </div>
-            <fieldset>
-              <legend className='text-sm font-medium'>加减比例</legend>
-              <div className='mt-3 space-y-3'>
-                <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-                  <label htmlFor='addition-weight' className='text-sm'>
-                    加法
-                  </label>
-                  <InputNumber
-                    id='addition-weight'
-                    name='additionWeight'
-                    min={0}
-                    max={100}
-                    step={1}
-                    required
-                    defaultValue={defaultOptions.additionWeight}
-                    className='min-w-0'
-                  />
-                </div>
-                <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-                  <label htmlFor='subtraction-weight' className='text-sm'>
-                    减法
-                  </label>
-                  <InputNumber
-                    id='subtraction-weight'
-                    name='subtractionWeight'
-                    min={0}
-                    max={100}
-                    step={1}
-                    required
-                    defaultValue={defaultOptions.subtractionWeight}
-                    className='min-w-0'
-                  />
-                </div>
-              </div>
-            </fieldset>
+          <SettingsGroup>
+            <SliderField name='count' label='题目数量' min={10} max={300} step={10} defaultValue={defaultOptions.count} />
+            <CheckboxField name='includeZero' label='包含 0（算式和结果）' defaultChecked={defaultOptions.includeZero} />
+            <SliderField name='additionWeight' label='加法比例' min={0} max={100} step={1} defaultValue={defaultOptions.additionWeight} />
+            <SliderField name='subtractionWeight' label='减法比例' min={0} max={100} step={1} defaultValue={defaultOptions.subtractionWeight} />
           </SettingsGroup>
-          <SettingsGroup title='版式'>
-            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-              <label htmlFor='columns' className='text-sm font-medium'>列数（1～6）</label>
-              <InputNumber
-                id='columns'
-                name='columns'
-                min={1}
-                max={6}
-                step={1}
-                required
-                defaultValue={defaultLayout.columns}
-                className='min-w-0'
-              />
-            </div>
-            <fieldset>
-              <legend className='text-sm font-medium'>字号与间距</legend>
-              <div className='mt-3 space-y-3'>
-                <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-                  <label htmlFor='font-size' className='text-sm'>字号（px）</label>
-                  <InputNumber id='font-size' name='fontSize' min={12} max={36} step='any' required defaultValue={defaultLayout.fontSize} className='min-w-0' />
-                </div>
-                <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-                  <label htmlFor='row-gap' className='text-sm'>行间距（mm）</label>
-                  <InputNumber id='row-gap' name='rowGap' min={0} max={20} step='any' required defaultValue={defaultLayout.rowGap} className='min-w-0' />
-                </div>
-                <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-                  <label htmlFor='column-gap' className='text-sm'>列间距（mm）</label>
-                  <InputNumber id='column-gap' name='columnGap' min={0} max={20} step='any' required defaultValue={defaultLayout.columnGap} className='min-w-0' />
-                </div>
-              </div>
-            </fieldset>
+          <SettingsGroup>
+            <SliderField name='columns' label='列数' min={1} max={6} step={1} defaultValue={defaultLayout.columns} />
+            <SliderField name='fontSize' label='字号（px）' min={12} max={36} step={0.5} defaultValue={defaultLayout.fontSize} />
+            <SliderField name='rowGap' label='行间距（mm）' min={0} max={20} step={0.1} defaultValue={defaultLayout.rowGap} />
+            <SliderField name='columnGap' label='列间距（mm）' min={0} max={20} step={0.1} defaultValue={defaultLayout.columnGap} />
           </SettingsGroup>
           {error ? (
             <p role='alert' className='text-sm text-destructive'>
               {error}预览未更新。
             </p>
           ) : null}
-          <div aria-live='polite' className='rounded-lg bg-muted p-4 text-sm leading-6'>
-            共 {exercises.length} 题 · {pageCount} 页<br />
-            加法 {additionCount} 题 · 减法 {exercises.length - additionCount} 题
-          </div>
           <Button type='submit' variant='outline' className='w-full' disabled={Boolean(error)}>
             <RefreshCw aria-hidden='true' />
             换一批题目

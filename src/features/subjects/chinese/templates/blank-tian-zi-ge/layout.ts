@@ -1,3 +1,4 @@
+import { defaultPageVisibility, getReservedHeight, type PageVisibility } from '@/features/builder/page-visibility'
 import { defaultPageMargins, getContentWidth, getContentHeight, type PageMargins } from '@/features/builder/page-margins'
 
 import { defaultGridColor } from '@/features/builder/worksheet-chrome'
@@ -26,10 +27,9 @@ export function validateLayout(layout: GridLayout): string | null {
   return null
 }
 
-export function getGridDimensions(layout: GridLayout, margins: PageMargins = defaultPageMargins) {
+export function getGridDimensions(layout: GridLayout, margins: PageMargins = defaultPageMargins, visibility: PageVisibility = defaultPageVisibility) {
   const columns = Math.floor((getContentWidth(margins)) / layout.cellSize)
-  // 姓名日期栏及下方间隔占 15 mm，页脚预留 8 mm。
-  const rows = Math.floor((getContentHeight(margins) - 23 + layout.rowGap) / (layout.cellSize + layout.rowGap))
+  const rows = Math.floor((getContentHeight(margins) - getReservedHeight(visibility, false, 5) + layout.rowGap) / (layout.cellSize + layout.rowGap))
   return {
     columns,
     rows,

@@ -1,3 +1,4 @@
+import { defaultPageVisibility, getReservedHeight, type PageVisibility } from '@/features/builder/page-visibility'
 import { defaultPageMargins, getContentWidth, getContentHeight, type PageMargins } from '@/features/builder/page-margins'
 
 export type WorksheetLayout = {
@@ -33,8 +34,8 @@ export function validateLayout(layout: WorksheetLayout, margins: PageMargins = d
   return null;
 }
 
-export function getPageCapacity(layout: WorksheetLayout, margins: PageMargins = defaultPageMargins): number {
+export function getPageCapacity(layout: WorksheetLayout, margins: PageMargins = defaultPageMargins, visibility: PageVisibility = defaultPageVisibility): number {
   const lineHeightMm = layout.fontSize * exerciseLineHeight * (25.4 / 96);
-  const rows = Math.floor((getContentHeight(margins) - 40 + layout.rowGap) / (lineHeightMm + layout.rowGap));
+  const rows = Math.floor((getContentHeight(margins) - getReservedHeight(visibility, true, 4) + layout.rowGap) / (lineHeightMm + layout.rowGap));
   return rows * layout.columns;
 }

@@ -4,9 +4,11 @@ import { useMemo, useState } from 'react'
 import { RefreshCw } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { InputNumber } from '@/components/ui/input-number'
 import { Select } from '@/components/ui/select'
+import { CheckboxField } from '@/features/builder/checkbox-field'
 import { SettingsGroup } from '@/features/builder/settings-group'
+import { SliderField } from '@/features/builder/slider-field'
+import { defaultPageVisibility } from '@/features/builder/page-visibility'
 import { defaultPageMargins } from '@/features/builder/page-margins'
 import { TemplateWorkspace } from '@/features/builder/template-workspace'
 import { defaultOptions, generateExercises, validateOptions } from './generator'
@@ -14,6 +16,7 @@ import { defaultLayout, getPageCapacity, validateLayout } from '../make-ten/layo
 import { BreakTenWorksheet } from './worksheet'
 
 export function BreakTenTemplate() {
+  const [visibility, setVisibility] = useState(defaultPageVisibility)
   const [margins, setMargins] = useState(defaultPageMargins)
   const [options, setOptions] = useState(defaultOptions)
   const [layout, setLayout] = useState(defaultLayout)
@@ -21,11 +24,11 @@ export function BreakTenTemplate() {
   const [seed, setSeed] = useState(42)
   const [error, setError] = useState<string | null>(null)
   const exercises = useMemo(() => generateExercises(options, seed), [options, seed])
-  const pageCapacity = getPageCapacity(layout, margins)
+  const pageCapacity = getPageCapacity(layout, margins, visibility)
   const pageCount = Math.ceil(exercises.length / pageCapacity)
 
   return (
-    <TemplateWorkspace margins={margins} onMarginsChange={setMargins}
+    <TemplateWorkspace visibility={visibility} onVisibilityChange={setVisibility} margins={margins} onMarginsChange={setMargins}
       title='破十法'
       configuration={
         <form
@@ -48,11 +51,8 @@ export function BreakTenTemplate() {
             if (!error) setSeed(Math.floor(Math.random() * 4294967296))
           }}
         >
-          <SettingsGroup title='内容'>
-            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-              <label htmlFor='count' className='text-sm font-medium'>题目数量（1～300）</label>
-              <InputNumber id='count' name='count' min={1} max={300} step={1} required defaultValue={defaultOptions.count} className='min-w-0' />
-            </div>
+          <SettingsGroup>
+            <SliderField name='count' label='题目数量' min={1} max={300} step={1} defaultValue={defaultOptions.count} />
             <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
               <label htmlFor='subtrahend' className='text-sm font-medium'>减数</label>
               <Select id='subtrahend' name='subtrahend' defaultValue={String(defaultOptions.subtrahend)} className='min-w-0'
@@ -65,25 +65,13 @@ export function BreakTenTemplate() {
                 ]}
               />
             </div>
-            <label className='flex items-center gap-3 text-sm font-medium'>
-              <input name='showAnswers' type='checkbox' defaultChecked={false} className='size-4 accent-slate-900' />
-              显示答案（含分解数）
-            </label>
+            <CheckboxField name='showAnswers' label='显示答案（含分解数）' defaultChecked={false} />
           </SettingsGroup>
-          <SettingsGroup title='版式'>
-            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-              <label htmlFor='columns' className='text-sm font-medium'>列数（1～3）</label>
-              <InputNumber id='columns' name='columns' min={1} max={3} step={1} required defaultValue={defaultLayout.columns} className='min-w-0' />
-            </div>
-            <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
-              <label htmlFor='row-gap' className='text-sm font-medium'>行间距（mm）</label>
-              <InputNumber id='row-gap' name='rowGap' min={0} max={20} step='any' required defaultValue={defaultLayout.rowGap} className='min-w-0' />
-            </div>
+          <SettingsGroup>
+            <SliderField name='columns' label='列数' min={1} max={3} step={1} defaultValue={defaultLayout.columns} />
+            <SliderField name='rowGap' label='行间距（mm）' min={0} max={20} step={0.1} defaultValue={defaultLayout.rowGap} />
           </SettingsGroup>
           {error ? <p role='alert' className='text-sm text-destructive'>{error}预览未更新。</p> : null}
-          <div aria-live='polite' className='rounded-lg bg-muted p-4 text-sm leading-6'>
-            {exercises.length} 题 · {pageCount} 页
-          </div>
           <Button type='submit' variant='outline' className='w-full' disabled={Boolean(error)}>
             <RefreshCw aria-hidden='true' />
             换一批题目

@@ -5,7 +5,7 @@ export function PreviewPane({ children }: { children: ReactNode }) {
     <section
       aria-label="练习预览"
       data-preview-pane
-      className="overflow-auto bg-muted p-4 md:p-8"
+      className="min-w-0 overflow-x-auto"
     >
       {children}
     </section>

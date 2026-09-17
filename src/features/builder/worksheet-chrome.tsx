@@ -2,14 +2,20 @@ export const defaultGridColor = '#596273'
 
 export function WorksheetHeader({ title, description }: { title?: string; description?: string }) {
   return (
-    <header data-worksheet-header className={title ? 'h-[28mm] text-[#83baff]' : 'flex h-[10mm] items-center text-[#83baff]'}>
-      <div className='flex w-full items-center justify-between whitespace-nowrap text-[13px]'>
-        <span>姓名：__________</span>
-        <span>日期：____ 年 ____ 月 ____ 日</span>
-      </div>
-      {title ? <h2 className='mt-2 text-center text-[24px] font-semibold tracking-widest text-[#333]'>{title}</h2> : null}
-      {description ? <p className='mt-2 text-center text-[12px] text-[#666]'>{description}</p> : null}
-    </header>
+    <>
+      <header data-worksheet-header className='flex h-[10mm] items-center text-[#83baff]'>
+        <div className='flex w-full items-center justify-between whitespace-nowrap text-[13px]'>
+          <span>姓名：__________</span>
+          <span>日期：____ 年 ____ 月 ____ 日</span>
+        </div>
+      </header>
+      {title ? (
+        <div data-worksheet-title className='h-[18mm]'>
+          <h2 className='text-center text-[24px] font-semibold tracking-widest text-[#333]'>{title}</h2>
+          {description ? <p className='mt-2 text-center text-[12px] text-[#666]'>{description}</p> : null}
+        </div>
+      ) : null}
+    </>
   )
 }
 

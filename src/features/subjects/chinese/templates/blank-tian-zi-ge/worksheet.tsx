@@ -1,10 +1,11 @@
+import { defaultPageVisibility, type PageVisibility } from '@/features/builder/page-visibility'
 import { defaultPageMargins, type PageMargins } from '@/features/builder/page-margins'
 import { WorksheetHeader, WorksheetFooter } from '@/features/builder/worksheet-chrome'
 
 import { defaultLayout, getGridDimensions, type GridLayout } from './layout'
 
-export function BlankTianZiGeWorksheet({ layout = defaultLayout, margins = defaultPageMargins }: { layout?: GridLayout; margins?: PageMargins }) {
-  const { rows, columns, width, height } = getGridDimensions(layout, margins)
+export function BlankTianZiGeWorksheet({ layout = defaultLayout, margins = defaultPageMargins, visibility = defaultPageVisibility }: { layout?: GridLayout; margins?: PageMargins; visibility?: PageVisibility }) {
+  const { rows, columns, width, height } = getGridDimensions(layout, margins, visibility)
   const size = layout.cellSize
   const hasCross = ['田字格', '米字格', '回田格', '回米格'].includes(layout.gridType)
   const hasDiagonals = ['米字格', '回米格'].includes(layout.gridType)
@@ -14,10 +15,11 @@ export function BlankTianZiGeWorksheet({ layout = defaultLayout, margins = defau
     <article
       data-worksheet-page
       aria-label={`空白${layout.gridType}，第 1 页，共 1 页`}
-      className='relative mx-auto mb-8 h-[297mm] w-[210mm] bg-white font-sans text-[#333] shadow-sm last:mb-0'
+      className='relative mb-8 h-[297mm] w-[210mm] bg-white font-sans text-[#333] shadow-sm last:mb-0'
     >
       <WorksheetHeader />
       <svg
+        data-worksheet-content
         viewBox={`0 0 ${width} ${height}`}
         style={{ width: `${width}mm`, height: `${height}mm` }}
         className='mx-auto mt-[5mm] block overflow-visible'

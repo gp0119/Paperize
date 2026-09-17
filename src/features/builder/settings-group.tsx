@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react'
 
-export function SettingsGroup({ title, children }: { title: string; children: ReactNode }) {
+export function SettingsGroup({ children }: { children: ReactNode }) {
   return (
-    <fieldset className='min-w-0 space-y-4 rounded-lg border p-4'>
-      <legend className='px-1 text-sm font-semibold'>{title}</legend>
+    <fieldset className='min-w-0 divide-y divide-border rounded-xl bg-background shadow-sm *:min-h-14 *:px-4 *:py-2'>
       {children}
     </fieldset>
   )

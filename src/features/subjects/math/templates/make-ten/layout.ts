@@ -1,3 +1,4 @@
+import { defaultPageVisibility, getReservedHeight, type PageVisibility } from '@/features/builder/page-visibility'
 import { defaultPageMargins, getContentWidth, getContentHeight, type PageMargins } from '@/features/builder/page-margins'
 
 export type WorksheetLayout = {
@@ -24,7 +25,7 @@ export function getExerciseHeight(layout: WorksheetLayout, margins: PageMargins 
   return (getContentWidth(margins) - (layout.columns - 1) * columnGap) / layout.columns * diagramHeight / diagramWidth;
 }
 
-export function getPageCapacity(layout: WorksheetLayout, margins: PageMargins = defaultPageMargins): number {
+export function getPageCapacity(layout: WorksheetLayout, margins: PageMargins = defaultPageMargins, visibility: PageVisibility = defaultPageVisibility): number {
   // A4 预留页眉、标题和页脚后的题目区域，单位为 mm。
-  return Math.floor((getContentHeight(margins) - 42 + layout.rowGap) / (getExerciseHeight(layout, margins) + layout.rowGap)) * layout.columns;
+  return Math.floor((getContentHeight(margins) - getReservedHeight(visibility, true, 6) + layout.rowGap) / (getExerciseHeight(layout, margins) + layout.rowGap)) * layout.columns;
 }

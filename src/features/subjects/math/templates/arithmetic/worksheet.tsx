@@ -13,9 +13,10 @@ type ArithmeticWorksheetProps = {
 
 export function ArithmeticWorksheet({ maximum, exercises, layout, pageIndex, pageCount }: ArithmeticWorksheetProps) {
   return (
-    <article data-worksheet-page aria-label={`第 ${pageIndex + 1} 页，共 ${pageCount} 页`} className='relative mx-auto mb-8 h-[297mm] w-[210mm] bg-white font-sans text-[#333] shadow-sm last:mb-0'>
+    <article data-worksheet-page aria-label={`第 ${pageIndex + 1} 页，共 ${pageCount} 页`} className='relative mb-8 h-[297mm] w-[210mm] bg-white font-sans text-[#333] shadow-sm last:mb-0'>
       <WorksheetHeader title={`${maximum} 以内加减法`} description='用时：____ 分 ____ 秒　　正确率：____ / ____' />
       <div
+        data-worksheet-content
         className='mt-3 grid'
         style={{
           gridTemplateColumns: `repeat(${layout.columns}, minmax(0, 1fr))`,
