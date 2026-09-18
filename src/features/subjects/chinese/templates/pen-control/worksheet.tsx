@@ -1,8 +1,12 @@
+import localFont from 'next/font/local'
+
 import { defaultPageMargins, type PageMargins } from '@/features/builder/page-margins'
 import type { PageVisibility } from '@/features/builder/page-visibility'
 import { WorksheetHeader, WorksheetFooter } from '@/features/builder/worksheet-chrome'
 import { getGridDimensions } from '../blank-tian-zi-ge/layout'
 import { defaultContent, parsePatterns, type PenPattern } from './patterns'
+
+const penControlFont = localFont({ src: './pen-control.woff2', weight: '400', adjustFontFallback: false })
 
 export const penControlVisibility: PageVisibility = { hideHeader: true, hideTitle: true, hideFooter: true }
 export const defaultOptions = {
@@ -17,8 +21,14 @@ export const defaultOptions = {
 }
 export type PenControlOptions = typeof defaultOptions
 
-export function PatternPath({ pattern, dashed = false }: { pattern: PenPattern; dashed?: boolean }) {
-  return <path d={pattern.path} transform={pattern.transform} strokeDasharray={dashed ? '5 5' : pattern.dash} />
+export function PatternGlyph({ pattern, dashed = false, strokeWidth = 0 }: { pattern: PenPattern; dashed?: boolean; strokeWidth?: number }) {
+  return (
+    <text className={penControlFont.className} x={50} y={88} fontSize={100} fontWeight={400} textAnchor='middle'
+      fill={dashed ? 'none' : 'currentColor'} stroke={strokeWidth || dashed ? 'currentColor' : 'none'}
+      strokeWidth={strokeWidth} strokeDasharray={dashed ? '5 5' : undefined} aria-hidden='true'>
+      {pattern.glyph}
+    </text>
+  )
 }
 
 export function PenControlWorksheet({ content = defaultContent, options = defaultOptions, margins = defaultPageMargins, visibility = penControlVisibility }: {
@@ -46,8 +56,9 @@ export function PenControlWorksheet({ content = defaultContent, options = defaul
                 d={`M 0 0 H ${width} V ${size} H 0 Z ${Array.from({ length: columns - 1 }, (_, column) => `M ${(column + 1) * size} 0 V ${size}`).join(' ')}`} />
               {pattern ? Array.from({ length: Math.min(columns, options.tracingCount) }, (_, column) => (
                 <g key={column} transform={`translate(${column * size} 0) scale(${size / 100})`}
-                  stroke={options.tracingColor} strokeWidth={Number(options.tracingWidth)} strokeLinecap='round' strokeLinejoin='round'>
-                  <PatternPath pattern={pattern} dashed={options.tracingDashed} />
+                  color={options.tracingColor} strokeLinecap='round' strokeLinejoin='round'>
+                  <PatternGlyph pattern={pattern} dashed={options.tracingDashed}
+                    strokeWidth={options.tracingDashed ? Number(options.tracingWidth) : Number(options.tracingWidth) - 0.8} />
                 </g>
               )) : null}
             </g>

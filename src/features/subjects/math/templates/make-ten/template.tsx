@@ -41,7 +41,7 @@ export function MakeTenTemplate() {
   const pageCount = Math.ceil(exercises.length / pageCapacity)
 
   return (
-    <TemplateWorkspace key={String(restored)} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} margins={margins} onMarginsChange={setMargins}
+    <TemplateWorkspace restored={restored} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} margins={margins} onMarginsChange={setMargins}
       title='凑十法'
       configuration={
         <form

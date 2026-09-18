@@ -69,7 +69,7 @@ export function StrokeOrderTemplate() {
   }
 
   return (
-    <TemplateWorkspace key={String(restored)} storageError={storageError} visibility={visibility} onVisibilityChange={(next) => { const message = validatePage(characters, margins, next, options); setLayoutError(message); if (!message) setVisibility(next) }} margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validatePage(characters, next, visibility, options)} title='笔顺字帖' configuration={
+    <TemplateWorkspace restored={restored} storageError={storageError} visibility={visibility} onVisibilityChange={(next) => { const message = validatePage(characters, margins, next, options); setLayoutError(message); if (!message) setVisibility(next) }} margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validatePage(characters, next, visibility, options)} title='笔顺字帖' configuration={
       <div className='space-y-6'>
         <SettingsGroup>
           <Dialog.Root open={open} onOpenChange={(next) => {

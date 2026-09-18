@@ -31,7 +31,7 @@ export function NumberPracticeTemplate() {
   const pages = paginateContent(content, options, columns, rows)
 
   return (
-    <TemplateWorkspace key={String(restored)} storageError={storageError}
+    <TemplateWorkspace restored={restored} storageError={storageError}
       title='数字练习'
       hasTitle={false}
       margins={margins}

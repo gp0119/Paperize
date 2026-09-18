@@ -38,7 +38,7 @@ export function ArithmeticTemplate({ maximum }: { maximum: 10 | 20 }) {
   const pageCount = Math.ceil(exercises.length / pageCapacity)
 
   return (
-    <TemplateWorkspace key={String(restored)} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validateLayout(layout, next, maximum)}
+    <TemplateWorkspace restored={restored} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validateLayout(layout, next, maximum)}
       title={`${maximum} 以内加减法`}
       configuration={
         <form

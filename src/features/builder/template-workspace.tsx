@@ -19,6 +19,7 @@ const visibilityOptions = [
 ];
 
 type TemplateWorkspaceProps = {
+  restored: boolean;
   storageError?: string | null;
   visibility: PageVisibility;
   onVisibilityChange: (visibility: PageVisibility) => void;
@@ -32,6 +33,7 @@ type TemplateWorkspaceProps = {
 };
 
 export function TemplateWorkspace({
+  restored,
   storageError,
   visibility,
   onVisibilityChange,
@@ -43,6 +45,14 @@ export function TemplateWorkspace({
   configuration,
   preview,
 }: TemplateWorkspaceProps) {
+  if (!restored) {
+    return (
+      <div className="flex flex-1 justify-center bg-muted">
+        <p role="status" className="px-4 py-8 text-sm text-muted-foreground">正在加载配置…</p>
+      </div>
+    );
+  }
+
   const { hideHeader, hideTitle, hideFooter } = visibility;
 
   return (

@@ -27,7 +27,7 @@ export function BlankTianZiGeTemplate() {
   const [error, setError] = useState<string | null>(null)
 
   return (
-    <TemplateWorkspace key={String(restored)} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} hasTitle={false} margins={margins} onMarginsChange={setMargins}
+    <TemplateWorkspace restored={restored} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} hasTitle={false} margins={margins} onMarginsChange={setMargins}
       title='空白田字格'
       configuration={
         <form

@@ -23,7 +23,7 @@ export function BlankFourLineTemplate() {
   const setVisibility = (visibility: typeof settings.visibility) => updateSettings({ visibility })
   const setMargins = (margins: typeof settings.margins) => updateSettings({ margins })
   return (
-    <TemplateWorkspace key={String(restored)} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} hasTitle={false} margins={margins} onMarginsChange={setMargins}
+    <TemplateWorkspace restored={restored} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} hasTitle={false} margins={margins} onMarginsChange={setMargins}
       title='空白四线三格'
       configuration={
         <SettingsGroup>
