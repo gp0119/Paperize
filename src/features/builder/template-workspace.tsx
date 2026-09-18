@@ -19,6 +19,7 @@ const visibilityOptions = [
 ];
 
 type TemplateWorkspaceProps = {
+  storageError?: string | null;
   visibility: PageVisibility;
   onVisibilityChange: (visibility: PageVisibility) => void;
   hasTitle?: boolean;
@@ -31,6 +32,7 @@ type TemplateWorkspaceProps = {
 };
 
 export function TemplateWorkspace({
+  storageError,
   visibility,
   onVisibilityChange,
   hasTitle = true,
@@ -67,6 +69,7 @@ export function TemplateWorkspace({
             <PrintButton />
           </div>
           <div className="space-y-4">
+            {storageError ? <p role="alert" className="text-sm text-destructive">{storageError}</p> : null}
             {configuration}
             <SettingsGroup>
               <PageMarginsField margins={margins} onChange={onMarginsChange} validate={validateMargins} />

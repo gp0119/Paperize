@@ -1,5 +1,7 @@
 'use client'
 
+import { useTemplateSettings, validMargins, validTracingOptions } from '@/features/builder/use-template-settings'
+
 import { useRef, useState } from 'react'
 import { Dialog } from 'radix-ui'
 import { Pencil, X } from 'lucide-react'
@@ -16,13 +18,24 @@ import { sampleCharacters } from './sample'
 import { StrokeOrderWorksheet } from './worksheet'
 
 export function StrokeOrderTemplate() {
-  const [visibility, setVisibility] = useState(defaultPageVisibility)
-  const [margins, setMargins] = useState(defaultPageMargins)
+  const { settings, updateSettings, restored, storageError } = useTemplateSettings('chinese/stroke-order', {
+    visibility: defaultPageVisibility,
+    margins: defaultPageMargins,
+    options: defaultOptions,
+    characters: sampleCharacters,
+  }, (saved) => validMargins(saved.margins)
+    && validTracingOptions(saved.options)
+    && saved.characters.length > 0 && saved.characters.length <= 40
+    && saved.characters.every((entry) => parseCharacters(entry.character).length === 1 && entry.strokes.length > 0)
+    && !validatePage(saved.characters, saved.margins, saved.visibility, saved.options))
+  const { visibility, margins, options, characters } = settings
+  const setVisibility = (visibility: typeof settings.visibility) => updateSettings({ visibility })
+  const setMargins = (margins: typeof settings.margins) => updateSettings({ margins })
+  const setOptions = (options: typeof settings.options) => updateSettings({ options })
+  const setCharacters = (characters: typeof settings.characters) => updateSettings({ characters })
   const [text, setText] = useState('永山水木')
   const [open, setOpen] = useState(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
-  const [characters, setCharacters] = useState(sampleCharacters)
-  const [options, setOptions] = useState(defaultOptions)
   const [layoutError, setLayoutError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -56,7 +69,7 @@ export function StrokeOrderTemplate() {
   }
 
   return (
-    <TemplateWorkspace visibility={visibility} onVisibilityChange={(next) => { const message = validatePage(characters, margins, next, options); setLayoutError(message); if (!message) setVisibility(next) }} margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validatePage(characters, next, visibility, options)} title='笔顺字帖' configuration={
+    <TemplateWorkspace key={String(restored)} storageError={storageError} visibility={visibility} onVisibilityChange={(next) => { const message = validatePage(characters, margins, next, options); setLayoutError(message); if (!message) setVisibility(next) }} margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validatePage(characters, next, visibility, options)} title='笔顺字帖' configuration={
       <div className='space-y-6'>
         <SettingsGroup>
           <Dialog.Root open={open} onOpenChange={(next) => {

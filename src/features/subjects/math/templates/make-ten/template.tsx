@@ -1,5 +1,7 @@
 'use client'
 
+import { useTemplateSettings, validMargins } from '@/features/builder/use-template-settings'
+
 import { useMemo, useState } from 'react'
 import { RefreshCw } from 'lucide-react'
 
@@ -16,19 +18,30 @@ import { defaultLayout, getPageCapacity, validateLayout } from './layout'
 import { MakeTenWorksheet } from './worksheet'
 
 export function MakeTenTemplate() {
-  const [visibility, setVisibility] = useState(defaultPageVisibility)
-  const [margins, setMargins] = useState(defaultPageMargins)
-  const [options, setOptions] = useState(defaultOptions)
-  const [layout, setLayout] = useState(defaultLayout)
-  const [showAnswers, setShowAnswers] = useState(false)
-  const [seed, setSeed] = useState(42)
+  const { settings, updateSettings, restored, storageError } = useTemplateSettings('math/make-ten', {
+    visibility: defaultPageVisibility,
+    margins: defaultPageMargins,
+    options: defaultOptions,
+    layout: defaultLayout,
+    showAnswers: false,
+    seed: 42,
+  }, (saved) => validMargins(saved.margins)
+    && !validateOptions(saved.options) && !validateLayout(saved.layout)
+    && Number.isInteger(saved.seed) && saved.seed >= 0 && saved.seed <= 4294967295)
+  const { visibility, margins, options, layout, showAnswers, seed } = settings
+  const setVisibility = (visibility: typeof settings.visibility) => updateSettings({ visibility })
+  const setMargins = (margins: typeof settings.margins) => updateSettings({ margins })
+  const setOptions = (options: typeof settings.options) => updateSettings({ options })
+  const setLayout = (layout: typeof settings.layout) => updateSettings({ layout })
+  const setShowAnswers = (showAnswers: typeof settings.showAnswers) => updateSettings({ showAnswers })
+  const setSeed = (seed: typeof settings.seed) => updateSettings({ seed })
   const [error, setError] = useState<string | null>(null)
   const exercises = useMemo(() => generateExercises(options, seed), [options, seed])
   const pageCapacity = getPageCapacity(layout, margins, visibility)
   const pageCount = Math.ceil(exercises.length / pageCapacity)
 
   return (
-    <TemplateWorkspace visibility={visibility} onVisibilityChange={setVisibility} margins={margins} onMarginsChange={setMargins}
+    <TemplateWorkspace key={String(restored)} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} margins={margins} onMarginsChange={setMargins}
       title='凑十法'
       configuration={
         <form
@@ -52,10 +65,10 @@ export function MakeTenTemplate() {
           }}
         >
           <SettingsGroup>
-            <SliderField name='count' label='题目数量' min={1} max={300} step={1} defaultValue={defaultOptions.count} />
+            <SliderField name='count' label='题目数量' min={1} max={300} step={1} defaultValue={options.count} />
             <div className='grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-center gap-x-3 gap-y-2'>
               <label htmlFor='first-addend' className='text-sm font-medium'>第一加数</label>
-              <Select id='first-addend' name='firstAddend' defaultValue={String(defaultOptions.firstAddend)} className='min-w-0'
+              <Select id='first-addend' name='firstAddend' defaultValue={String(options.firstAddend)} className='min-w-0'
                 options={[
                   { value: '0', label: '混合练习（2～9）' },
                   ...Array.from({ length: 8 }, (_, index) => {
@@ -65,11 +78,11 @@ export function MakeTenTemplate() {
                 ]}
               />
             </div>
-            <CheckboxField name='showAnswers' label='显示答案（含分解数）' defaultChecked={false} />
+            <CheckboxField name='showAnswers' label='显示答案（含分解数）' defaultChecked={showAnswers} />
           </SettingsGroup>
           <SettingsGroup>
-            <SliderField name='columns' label='列数' min={1} max={3} step={1} defaultValue={defaultLayout.columns} />
-            <SliderField name='rowGap' label='行间距（mm）' min={0} max={20} step={0.1} defaultValue={defaultLayout.rowGap} />
+            <SliderField name='columns' label='列数' min={1} max={3} step={1} defaultValue={layout.columns} />
+            <SliderField name='rowGap' label='行间距（mm）' min={0} max={20} step={0.1} defaultValue={layout.rowGap} />
           </SettingsGroup>
           {error ? <p role='alert' className='text-sm text-destructive'>{error}预览未更新。</p> : null}
           <Button type='submit' variant='outline' className='w-full' disabled={Boolean(error)}>

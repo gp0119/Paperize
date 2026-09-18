@@ -1,5 +1,7 @@
 'use client'
 
+import { useTemplateSettings, validMargins, validTracingOptions } from '@/features/builder/use-template-settings'
+
 import { useState } from 'react'
 import { ArrowLeft, ArrowRight, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -7,14 +9,24 @@ import { defaultPageMargins } from '@/features/builder/page-margins'
 import { TracingSettings } from '@/features/builder/tracing-settings'
 import { SettingsGroup } from '@/features/builder/settings-group'
 import { TemplateWorkspace } from '@/features/builder/template-workspace'
-import { penPatterns, type PenPattern } from './patterns'
+import { penPatterns } from './patterns'
 import { defaultOptions, PatternPath, PenControlWorksheet, penControlVisibility } from './worksheet'
 
 export function PenControlTemplate() {
-  const [visibility, setVisibility] = useState(penControlVisibility)
-  const [margins, setMargins] = useState(defaultPageMargins)
-  const [options, setOptions] = useState(defaultOptions)
-  const [patterns, setPatterns] = useState<PenPattern[]>(penPatterns.slice(0, 6))
+  const { settings, updateSettings, restored, storageError } = useTemplateSettings('chinese/pen-control', {
+    visibility: penControlVisibility,
+    margins: defaultPageMargins,
+    options: defaultOptions,
+    patterns: penPatterns.slice(0, 6),
+  }, (saved) => validMargins(saved.margins)
+    && validTracingOptions(saved.options)
+    && saved.patterns.length <= 200
+    && saved.patterns.every((pattern) => penPatterns.some((known) => JSON.stringify(known) === JSON.stringify(pattern))))
+  const { visibility, margins, options, patterns } = settings
+  const setVisibility = (visibility: typeof settings.visibility) => updateSettings({ visibility })
+  const setMargins = (margins: typeof settings.margins) => updateSettings({ margins })
+  const setOptions = (options: typeof settings.options) => updateSettings({ options })
+  const setPatterns = (patterns: typeof settings.patterns) => updateSettings({ patterns })
   const [selected, setSelected] = useState<number | null>(null)
   const content = patterns.map((pattern) => pattern.name).join(' ')
 
@@ -26,7 +38,7 @@ export function PenControlTemplate() {
   }
 
   return (
-    <TemplateWorkspace title='控笔练习' hasTitle={false} visibility={visibility} onVisibilityChange={setVisibility}
+    <TemplateWorkspace key={String(restored)} storageError={storageError} title='控笔练习' hasTitle={false} visibility={visibility} onVisibilityChange={setVisibility}
       margins={margins} onMarginsChange={setMargins}
       configuration={
         <div className='space-y-4'>

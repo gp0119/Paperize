@@ -50,7 +50,7 @@ export default async function TemplatePage({
   }
 
   if (subject === "math" && template.id === "within-ten") {
-    return <ArithmeticTemplate maximum={10} />;
+    return <ArithmeticTemplate key={template.id} maximum={10} />;
   }
 
   if (subject === "math" && template.id === "number-practice") {
@@ -58,7 +58,7 @@ export default async function TemplatePage({
   }
 
   if (subject === "math" && template.id === "within-twenty") {
-    return <ArithmeticTemplate maximum={20} />;
+    return <ArithmeticTemplate key={template.id} maximum={20} />;
   }
 
   notFound();

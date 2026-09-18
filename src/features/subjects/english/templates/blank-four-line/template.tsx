@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useTemplateSettings, validMargins, validColor } from '@/features/builder/use-template-settings'
 
 import { defaultPageVisibility } from '@/features/builder/page-visibility'
 import { defaultPageMargins } from '@/features/builder/page-margins'
@@ -12,11 +12,18 @@ import { Slider } from '@/components/ui/slider'
 import { defaultOptions, BlankFourLineWorksheet } from './worksheet'
 
 export function BlankFourLineTemplate() {
-  const [options, setOptions] = useState(defaultOptions)
-  const [visibility, setVisibility] = useState(defaultPageVisibility)
-  const [margins, setMargins] = useState(defaultPageMargins)
+  const { settings, updateSettings, restored, storageError } = useTemplateSettings('english/blank-four-line', {
+    options: defaultOptions,
+    visibility: defaultPageVisibility,
+    margins: defaultPageMargins,
+  }, (saved) => validMargins(saved.margins)
+    && saved.options.cellSize >= 6 && saved.options.cellSize <= 25 && saved.options.rowGap >= 0 && saved.options.rowGap <= 10 && validColor(saved.options.color) && validColor(saved.options.baselineColor))
+  const { options, visibility, margins } = settings
+  const setOptions = (options: typeof settings.options) => updateSettings({ options })
+  const setVisibility = (visibility: typeof settings.visibility) => updateSettings({ visibility })
+  const setMargins = (margins: typeof settings.margins) => updateSettings({ margins })
   return (
-    <TemplateWorkspace visibility={visibility} onVisibilityChange={setVisibility} hasTitle={false} margins={margins} onMarginsChange={setMargins}
+    <TemplateWorkspace key={String(restored)} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} hasTitle={false} margins={margins} onMarginsChange={setMargins}
       title='空白四线三格'
       configuration={
         <SettingsGroup>

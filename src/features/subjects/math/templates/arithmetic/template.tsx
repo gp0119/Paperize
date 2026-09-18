@@ -1,5 +1,7 @@
 'use client'
 
+import { useTemplateSettings, validMargins } from '@/features/builder/use-template-settings'
+
 import { useMemo, useState } from 'react'
 import { RefreshCw } from 'lucide-react'
 
@@ -15,18 +17,28 @@ import { defaultLayout, getPageCapacity, validateLayout } from './layout'
 import { ArithmeticWorksheet } from './worksheet'
 
 export function ArithmeticTemplate({ maximum }: { maximum: 10 | 20 }) {
-  const [visibility, setVisibility] = useState(defaultPageVisibility)
-  const [margins, setMargins] = useState(defaultPageMargins)
-  const [options, setOptions] = useState(defaultOptions)
-  const [layout, setLayout] = useState(defaultLayout)
-  const [seed, setSeed] = useState(42)
+  const { settings, updateSettings, restored, storageError } = useTemplateSettings(`math/within-${maximum}`, {
+    visibility: defaultPageVisibility,
+    margins: defaultPageMargins,
+    options: defaultOptions,
+    layout: defaultLayout,
+    seed: 42,
+  }, (saved) => validMargins(saved.margins)
+    && !validateOptions(saved.options) && !validateLayout(saved.layout, saved.margins, maximum)
+    && Number.isInteger(saved.seed) && saved.seed >= 0 && saved.seed <= 4294967295)
+  const { visibility, margins, options, layout, seed } = settings
+  const setVisibility = (visibility: typeof settings.visibility) => updateSettings({ visibility })
+  const setMargins = (margins: typeof settings.margins) => updateSettings({ margins })
+  const setOptions = (options: typeof settings.options) => updateSettings({ options })
+  const setLayout = (layout: typeof settings.layout) => updateSettings({ layout })
+  const setSeed = (seed: typeof settings.seed) => updateSettings({ seed })
   const [error, setError] = useState<string | null>(null)
   const exercises = useMemo(() => generateExercises(options, seed, maximum), [options, seed, maximum])
   const pageCapacity = getPageCapacity(layout, margins, visibility)
   const pageCount = Math.ceil(exercises.length / pageCapacity)
 
   return (
-    <TemplateWorkspace visibility={visibility} onVisibilityChange={setVisibility} margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validateLayout(layout, next, maximum)}
+    <TemplateWorkspace key={String(restored)} storageError={storageError} visibility={visibility} onVisibilityChange={setVisibility} margins={margins} onMarginsChange={setMargins} validateMargins={(next) => validateLayout(layout, next, maximum)}
       title={`${maximum} 以内加减法`}
       configuration={
         <form
@@ -59,16 +71,16 @@ export function ArithmeticTemplate({ maximum }: { maximum: 10 | 20 }) {
           }}
         >
           <SettingsGroup>
-            <SliderField name='count' label='题目数量' min={10} max={300} step={10} defaultValue={defaultOptions.count} />
-            <CheckboxField name='includeZero' label='包含 0（算式和结果）' defaultChecked={defaultOptions.includeZero} />
-            <SliderField name='additionWeight' label='加法比例' min={0} max={100} step={1} defaultValue={defaultOptions.additionWeight} />
-            <SliderField name='subtractionWeight' label='减法比例' min={0} max={100} step={1} defaultValue={defaultOptions.subtractionWeight} />
+            <SliderField name='count' label='题目数量' min={10} max={300} step={10} defaultValue={options.count} />
+            <CheckboxField name='includeZero' label='包含 0（算式和结果）' defaultChecked={options.includeZero} />
+            <SliderField name='additionWeight' label='加法比例' min={0} max={100} step={1} defaultValue={options.additionWeight} />
+            <SliderField name='subtractionWeight' label='减法比例' min={0} max={100} step={1} defaultValue={options.subtractionWeight} />
           </SettingsGroup>
           <SettingsGroup>
-            <SliderField name='columns' label='列数' min={1} max={6} step={1} defaultValue={defaultLayout.columns} />
-            <SliderField name='fontSize' label='字号（px）' min={12} max={36} step={0.5} defaultValue={defaultLayout.fontSize} />
-            <SliderField name='rowGap' label='行间距（mm）' min={0} max={20} step={0.1} defaultValue={defaultLayout.rowGap} />
-            <SliderField name='columnGap' label='列间距（mm）' min={0} max={20} step={0.1} defaultValue={defaultLayout.columnGap} />
+            <SliderField name='columns' label='列数' min={1} max={6} step={1} defaultValue={layout.columns} />
+            <SliderField name='fontSize' label='字号（px）' min={12} max={36} step={0.5} defaultValue={layout.fontSize} />
+            <SliderField name='rowGap' label='行间距（mm）' min={0} max={20} step={0.1} defaultValue={layout.rowGap} />
+            <SliderField name='columnGap' label='列间距（mm）' min={0} max={20} step={0.1} defaultValue={layout.columnGap} />
           </SettingsGroup>
           {error ? (
             <p role='alert' className='text-sm text-destructive'>
